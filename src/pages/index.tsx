@@ -1,8 +1,10 @@
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Card, CardContent, CardHeader, Grid, IconButton } from "@mui/material";
+import { Card, CardContent, CardHeader, CardMedia, Grid, IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
+import example from "public/exampleAk.png";
 import { useState } from "react";
+import Image from 'next/image'
 
 export default function Home() {
   const isSearchBarOnTop = false;
@@ -30,25 +32,70 @@ export default function Home() {
         </div>
       </div>
       <Grid container spacing={5} className="m-1">
-        <Grid item xs={2}>
+        <Grid item xs={10} md={2}>
           {/* TODO: test this out with a single cs2 item */}
           <Card className="bg-red-100">
             <CardHeader>
               Test
             </CardHeader>
+            <CardMedia title="test">
+              <div>
+                <Image src={example} alt="test"/>
+              </div>
+            </CardMedia>
+            
             <CardContent>
                 test content
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={2}>
-          hello
+        <Grid item xs={10} md={2}>
+          <Card className="bg-red-100">
+            <CardHeader>
+              Test
+            </CardHeader>
+            <CardMedia title="test">
+              <div>
+                <Image src={example} alt="test"/>
+              </div>
+            </CardMedia>
+            
+            <CardContent>
+                test content
+            </CardContent>
+          </Card>
         </Grid>
-        <Grid item xs={2}>
-          hello
+        <Grid item xs={10} md={2}>
+          <Card className="bg-red-100">
+            <CardHeader>
+              Test
+            </CardHeader>
+            <CardMedia title="test">
+              <div>
+                <Image src={example} alt="test"/>
+              </div>
+            </CardMedia>
+            
+            <CardContent>
+                test content
+            </CardContent>
+          </Card>
         </Grid>
-        <Grid item xs={2}>
-          hello
+        <Grid item xs={10} md={2}>
+          <Card className="bg-red-100">
+            <CardHeader>
+              Test
+            </CardHeader>
+            <CardMedia title="test">
+              <div>
+                <Image src={example} alt="test"/>
+              </div>
+            </CardMedia>
+            
+            <CardContent>
+                test content
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </>
