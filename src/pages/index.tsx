@@ -1,10 +1,33 @@
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Card, CardActionArea, CardContent, CardHeader, CardMedia, Grid, IconButton } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
 import Image from 'next/image';
 import example from "public/exampleAk.png";
 import { useState } from "react";
+import { type StaticImageData } from "next/image"
+
+function CsSkin(props: {gunName: string,skinName: string, gunPic:StaticImageData}){
+  return (
+    <>
+      <Grid item xs={10} md={2} >
+        <Card className="bg-gray-50 hover:scale-125">
+          <CardActionArea>
+            <CardContent>
+                 {props.gunName}
+            </CardContent>
+            <CardMedia>
+                <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)}/>
+            </CardMedia>
+            <CardContent>
+                 {props.skinName}
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </Grid>
+    </>
+  )
+}
 
 export default function Home() {
   const isSearchBarOnTop = false;
@@ -32,69 +55,7 @@ export default function Home() {
         </div>
       </div>
       <Grid container spacing={5} className="m-1">
-        <Grid item xs={10} md={2} >
-          <Card className="bg-gray-50 hover:scale-125">
-            <CardActionArea>
-              <CardContent>
-                   Gun name
-              </CardContent>
-              <CardMedia title="test">
-                  <Image src={example} alt="test"/>
-              </CardMedia>
-              <CardContent>
-                   skin name
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item xs={10} md={2}>
-          <Card className="bg-red-100">
-            <CardHeader>
-              Test
-            </CardHeader>
-            <CardMedia title="test">
-              <div>
-                <Image src={example} alt="test"/>
-              </div>
-            </CardMedia>
-            
-            <CardContent>
-                test content
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={10} md={2}>
-          <Card className="bg-red-100">
-            <CardHeader>
-              Test
-            </CardHeader>
-            <CardMedia title="test">
-              <div>
-                <Image src={example} alt="test"/>
-              </div>
-            </CardMedia>
-            
-            <CardContent>
-                test content
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={10} md={2}>
-          <Card className="bg-red-100">
-            <CardHeader>
-              Test
-            </CardHeader>
-            <CardMedia title="test">
-              <div>
-                <Image src={example} alt="test"/>
-              </div>
-            </CardMedia>
-            
-            <CardContent>
-                test content
-            </CardContent>
-          </Card>
-        </Grid>
+        <CsSkin gunName="ex" skinName ="ex" gunPic={example}/>
       </Grid>
     </>
   );
