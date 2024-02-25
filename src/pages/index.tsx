@@ -1,33 +1,10 @@
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton } from "@mui/material";
+import { Grid, IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
-import Image from 'next/image';
 import example from "public/exampleAk.png";
 import { useState } from "react";
-import { type StaticImageData } from "next/image"
-
-function CsSkin(props: {gunName: string,skinName: string, gunPic:StaticImageData}){
-  return (
-    <>
-      <Grid item xs={10} md={2} >
-        <Card className="bg-gray-50 hover:scale-125">
-          <CardActionArea>
-            <CardContent>
-                 {props.gunName}
-            </CardContent>
-            <CardMedia>
-                <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)}/>
-            </CardMedia>
-            <CardContent>
-                 {props.skinName}
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
-    </>
-  )
-}
+import TestCs from '~/utils/components';
 
 export default function Home() {
   const isSearchBarOnTop = false;
@@ -55,7 +32,7 @@ export default function Home() {
         </div>
       </div>
       <Grid container spacing={5} className="m-1">
-        <CsSkin gunName="ex" skinName ="ex" gunPic={example}/>
+        <TestCs gunName="ex" skinName ="ex" gunPic={example}/>
       </Grid>
     </>
   );
