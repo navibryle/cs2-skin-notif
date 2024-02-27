@@ -1,8 +1,10 @@
 import json
 import sys
 import re
-from os import walk
+import os
+import requests
 
+rootFolder = "/home/ivan/test/testCS"
 # for (path,dirnames,filenames) in walk(sys.argv[1]):
 #     print(path)
 #     if len(filenames) > 0:
@@ -23,10 +25,19 @@ def parseJsonEntry(fName):
                 while (curPos < len(gunJson) and gunJson[curPos] != "-"):
                     skinName += gunJson[curPos]
                     curPos+=1
-                print(name.strip() + " " + skinName.strip())
-                print()
+                newPath = []
+                name = name.strip()
+                skinName = skinName.strip().replace(" ","_")
+                rootPath = rootFolder+"/"+name
                 for wearTier,z in k["wears"].items():
-                    print(wearTier + " " + z)
-
+                    newPath.append(rootPath+"/"+wearTier)
+                for idx,h in enumerate(newPath):
+                    h = h.replace(" ","_")
+                    newPath[idx] = h
+                    if not os.path.exists("h"):
+                        os.makedirs(h)
+                for (idx,(wearTier,z)) in enumerate(k["wears"].items()):
+                    with open(newPath[idx]+"/"+skinName+".png","wb") as im:
+                        im.write(requests.get(z).content)
 parseJsonEntry(sys.argv[1])
 
