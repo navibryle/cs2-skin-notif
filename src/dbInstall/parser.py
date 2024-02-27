@@ -25,3 +25,8 @@ def parseJsonEntry(fName):
                     curPos+=1
                 print(name.strip() + " " + skinName.strip())
                 print()
+                for wearTier,z in k["wears"].items():
+                    print(wearTier + " " + z)
+
+parseJsonEntry(sys.argv[1])
+
