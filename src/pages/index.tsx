@@ -14,6 +14,7 @@ export default function Home() {
       setSearchBarTopMargin("10vh");
     }
   }
+
   return (
     <>
       <Head>

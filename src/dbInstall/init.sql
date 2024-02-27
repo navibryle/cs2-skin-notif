@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS GUNS (
+    gunJson VARCHAR(255) NOT NULL,
+    SKIN_NAME VARCHAR(255) NOT NULL,
+    IMAGE_NAME VARCHAR(255) NOT NULL, 
+    ID INT8 NOT NULL,
+    PRIMARY KEY(ID)
+);-- this image should be a static asset
+
+
