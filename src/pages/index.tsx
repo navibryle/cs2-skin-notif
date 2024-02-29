@@ -1,18 +1,16 @@
 'use client';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Grid, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
-import example from "public/exampleAk.png";
 import { useState } from "react";
+import SkinGrid from '~/components/SkinGrid';
 import { api } from '~/utils/api';
-import TestCs from '~/utils/components';
 
 export default function Home() {
   const isSearchBarOnTop = false;
   const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
   const [input,setInput] = useState("");
-  const res = api.skins.getSkin.useQuery("MAG-7");
   const searchBtnClick = async () => {
     if (!isSearchBarOnTop){
       setSearchBarTopMargin("10vh");
@@ -39,9 +37,7 @@ export default function Home() {
           </span>
         </div>
       </div>
-      <Grid container spacing={5} className="m-1">
-        <TestCs gunName="ex" skinName ="ex" gunPic={example}/>
-      </Grid>
+      <SkinGrid gunName={input}/>
     </>
   );
 }
