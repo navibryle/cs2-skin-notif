@@ -1,18 +1,25 @@
+'use client';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import { Grid, IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
 import example from "public/exampleAk.png";
 import { useState } from "react";
+import { api } from '~/utils/api';
 import TestCs from '~/utils/components';
 
 export default function Home() {
   const isSearchBarOnTop = false;
   const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
-  const searchBtnClick = () => {
+  const [input,setInput] = useState("");
+  const res = api.skins.getSkin.useQuery("MAG-7");
+  const searchBtnClick = async () => {
     if (!isSearchBarOnTop){
       setSearchBarTopMargin("10vh");
     }
+  }
+  const onSearchInput = (e : React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
   }
 
   return (
@@ -25,7 +32,7 @@ export default function Home() {
       <div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:"10vh"}}>
         <div className="text-center">
           <span className="flex justify-center">
-            <TextField id="outlined-basic" variant="outlined" label="Search"/>
+            <TextField id="outlined-basic" variant="outlined" label="Search" onInput={onSearchInput}/>
             <IconButton aria-label = "search" className="align-middle" onClick={searchBtnClick}>
               <ZoomInIcon/>
             </IconButton>

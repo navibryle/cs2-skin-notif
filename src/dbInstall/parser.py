@@ -8,11 +8,9 @@ if (len(sys.argv) != 3):
     exit()
 
 
-gunId=0
 skinId=0
 gunsCreated = []
 skinCreated = {}
-gunIdMap = {}
 rootFolder = sys.argv[2]
 sqlFile = rootFolder+"/dataInit.sql"
 
@@ -46,17 +44,12 @@ def parseJsonEntry(fName):
                         newPath = []
                         name = name.strip().replace(" ","_")
                         skinName = skinName.strip().replace(" ","_")
-
-                        if name not in gunsCreated: # check if we need to add gun to the table
+                        if name not in gunsCreated:
                             gunsCreated.append(name)
-                            gunIdMap[name] = gunId
                             skinCreated[name] = []
-                            tmp = "INSERT INTO GUNS (ID,NAME) VALUES (" +str(gunId)+",'"+name+"');\n"
-                            f.write(tmp)
-                            gunId += 1
                         if skinName not in skinCreated[name]: # check if we need to add skin to the table
                             skinCreated[name].append(skinName)
-                            tmp = "INSERT INTO SKINS (ID,NAME,GUN_ID) VALUES (" + str(skinId) +",'"+skinName+"',"+str(gunIdMap[name])+");\n"
+                            tmp = "INSERT INTO SKINS (ID,NAME,GUN_NAME) VALUES (" + str(skinId) +",'"+skinName+"','"+name+"');\n"
                             f.write(tmp)
                             skinId += 1
                         rootPath = rootFolder+"/"+name
