@@ -1,15 +1,23 @@
 'use client';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Autocomplete, type AutocompleteInputChangeReason, IconButton, Tooltip } from "@mui/material";
+import { Autocomplete, IconButton, Tooltip, type AutocompleteInputChangeReason } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
-import { type SyntheticEvent, useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import SkinGrid from '~/components/SkinGrid';
+import { api } from '~/utils/api';
 
 export default function Home() {
-  const isSearchBarOnTop = false;
+  // use states
   const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
-  const [input,setInput] = useState("");
+  const [query,setInput] = useState("");
+
+  const isSearchBarOnTop = false;
+
+  const gunNames : Array<{GUN_NAME:string}> | undefined = api.skins.getAllGunNames.useQuery().data;
+  if (gunNames === undefined){
+    throw new Error("could not find any guns");
+  }
   const test = [
     {label: "test"}
   ]
@@ -47,7 +55,7 @@ export default function Home() {
           </span>
         </div>
       </div>
-      <SkinGrid gunName={input}/>
+      <SkinGrid gunName={query}/>
     </>
   );
 }

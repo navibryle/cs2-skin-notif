@@ -12,7 +12,15 @@ export const steamRouter = createTRPCRouter({
             GUN_NAME:{
                 equals:input
             }
-        }
+        },
         })
+    }),
+    getAllGunNames : publicProcedure.query(({ctx}) => {
+        return ctx.db.sKINS.findMany({
+            select:{
+                GUN_NAME:true
+            },
+            distinct:"GUN_NAME"
+        });
     })
 })
