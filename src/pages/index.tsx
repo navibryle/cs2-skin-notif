@@ -1,9 +1,9 @@
 'use client';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Autocomplete, IconButton, Tooltip } from "@mui/material";
+import { Autocomplete, type AutocompleteInputChangeReason, IconButton, Tooltip } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Head from "next/head";
-import { useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import SkinGrid from '~/components/SkinGrid';
 
 export default function Home() {
@@ -18,8 +18,8 @@ export default function Home() {
       setSearchBarTopMargin("10vh");
     }
   }
-  const onSearchInput = (e : React.ChangeEvent<HTMLInputElement>,option,reason) => {
-    setInput(e.target.value);
+  const onSearchInput = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {
+    setInput(value);
   }
   return (
     <>
@@ -37,7 +37,7 @@ export default function Home() {
             options={test}
             onInputChange={onSearchInput}
             sx={{width:300}}
-            renderInput={(params) => <TextField {...params} label="Movie"/>}
+            renderInput={(params) => <TextField {...params}/>}
             />
             <Tooltip title="Search">
               <IconButton aria-label = "search" className="align-middle" onClick={searchBtnClick}>
