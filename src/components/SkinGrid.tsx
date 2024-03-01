@@ -7,6 +7,7 @@ export default function SkinGrid(props :{gunName:string}){
     const skinList = skins.data;
       return <Grid container spacing={5} className="m-1">
         {skinList?.map((skin) =>(
+            /*Need to use the GUN_NAME from database here since gun name doesn't always match the case sensitivity of the folder names*/
             <GridEntry 
                 key={skin.NAME.concat(skin.GUN_NAME)} 
                 gunName={skin.GUN_NAME} 
