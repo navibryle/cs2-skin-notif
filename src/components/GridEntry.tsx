@@ -7,9 +7,6 @@ export default function GridEntry(props: {gunName: string,skinName: string, gunP
       <Grid item xs={10} md={2} >
         <Card className="bg-gray-50 hover:scale-125">
           <CardActionArea>
-            <CardContent>
-                 {props.gunName}
-            </CardContent>
             <CardMedia>
                 <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)} width={300} height={300}/>
             </CardMedia>

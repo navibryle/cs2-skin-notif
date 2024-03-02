@@ -1,15 +1,12 @@
 'use client';
-import { type AutocompleteInputChangeReason } from "@mui/material";
 import Head from "next/head";
-import { useState, type SyntheticEvent } from "react";
+import { useState } from "react";
 import SearchBar from '~/components/SearchBar';
 import SkinGrid from '~/components/SkinGrid';
 
 export default function Home() {
   const [query,setInput] = useState("");
-  const onSearchInput = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {
-    setInput(value);
-  }
+  const [hasQueryRes,setHasQueryRes] = useState(false);
   return (
     <>
       <Head>
@@ -17,8 +14,8 @@ export default function Home() {
         <meta name="description" content="Notifies users with their selected counter strike market trend" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SearchBar  onSearchInput={onSearchInput}/>
-      <SkinGrid gunName={query}/>
+      <SearchBar  setInput={setInput} hasQueryResState={{hasQueryRes,setHasQueryRes}}/>
+      <SkinGrid gunName={query} setHasQueryRes={setHasQueryRes} hasQueryResState={{hasQueryRes,setHasQueryRes}}/>
     </>
   );
 }

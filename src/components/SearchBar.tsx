@@ -1,19 +1,31 @@
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import { Autocomplete, IconButton, TextField, Tooltip, type AutocompleteInputChangeReason } from "@mui/material";
-import { useState, type SyntheticEvent } from "react";
+import { useState, type SyntheticEvent, type Dispatch, type SetStateAction } from "react";
 import { api } from "~/utils/api";
 
+function updateSearchBar(queryRes :boolean,height:string,setSearchBarTopMargin:Dispatch<SetStateAction<string>>){
+    if (queryRes && height !== "10vh"){
+        setSearchBarTopMargin("10vh");
+    }else if (!queryRes && height !== "50vh"){
+        setSearchBarTopMargin("50vh");
+    }
+}
+
 export default function SearchBar(props:{
-    onSearchInput:(event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void
+    hasQueryResState:{hasQueryRes:boolean,setHasQueryRes:Dispatch<SetStateAction<boolean>>}
+    setInput:Dispatch<SetStateAction<string>>
   }){
 
   const gunData = api.skins.getAllGunNames.useQuery();
   const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
 
+  const onSearchInput = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {
+    // reason and event are unused, they are only here to adhere to a type contract
+    props.setInput(value);
+  }
   if (gunData.status === "loading"){
     return (<div>Loading</div>)
   }else if (gunData.status === "success"){
-    const isSearchBarOnTop = false;
 
     const gunNames : Array<{GUN_NAME:string}> | undefined = gunData.data;
     const gunList:Array<{label:string,key:string}>= [];
@@ -23,10 +35,11 @@ export default function SearchBar(props:{
     for (const gun of gunNames){
       gunList.push({label:gun.GUN_NAME.replace("_"," "),key:(Math.random()*Math.pow(2,31)).toString()});
     }
-    const searchBtnClick = async () => {
-      if (!isSearchBarOnTop){
-        setSearchBarTopMargin("10vh");
-      }
+
+    updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
+
+    const searchBtnClick = () => {
+      updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
     }
 
     return (<div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:"10vh"}}>
@@ -36,7 +49,7 @@ export default function SearchBar(props:{
             disablePortal
             id="combo"
             options={gunList}
-            onInputChange={props.onSearchInput}
+            onInputChange={onSearchInput}
             sx={{width:300}}
             renderInput={(params) => <TextField {...params}/>}
             />
