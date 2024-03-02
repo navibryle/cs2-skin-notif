@@ -42,12 +42,12 @@ export default function SearchBar(props:{
       updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
     }
 
-    return (<div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:"10vh"}}>
+    return (
+      <div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:"10vh"}}>
         <div className="text-center">
           <span className="flex justify-center">
             <Autocomplete 
             disablePortal
-            id="combo"
             options={gunList}
             onInputChange={onSearchInput}
             sx={{width:300}}
@@ -62,13 +62,14 @@ export default function SearchBar(props:{
         </div>
       </div>);
   }else{
-    return (<div>
-    <div>
-      Error
-    </div>
-    <div>
-      {gunData.error.message}
-    </div>
-    </div>)
+    return (
+      <div>
+        <div>
+          Error
+        </div>
+        <div>
+          {gunData.error.message}
+        </div>
+      </div>)
   }
 }
