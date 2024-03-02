@@ -9,7 +9,7 @@ export default function SkinGrid(props :{gunName:string}){
         {skinList?.map((skin) =>(
             /*Need to use the GUN_NAME from database here since gun name doesn't always match the case sensitivity of the folder names*/
             <GridEntry 
-                key={skin.NAME.concat(skin.GUN_NAME)} 
+                key={skin.NAME.concat(skin.GUN_NAME).concat((Math.random()*Math.pow(2,31)).toString())} 
                 gunName={skin.GUN_NAME} 
                 skinName ={skin.NAME} 
                 gunPic={"/Skins".concat("/").concat(skin.GUN_NAME).concat("/Factory_New").concat("/").concat(skin.NAME).concat(".png")}

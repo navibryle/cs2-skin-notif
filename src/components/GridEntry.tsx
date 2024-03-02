@@ -2,7 +2,6 @@ import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/materia
 import Image from "next/image";
 
 export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string}){
-  console.log(props.gunPic);
   return (
     <>
       <Grid item xs={10} md={2} >

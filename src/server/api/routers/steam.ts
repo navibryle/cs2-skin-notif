@@ -2,8 +2,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { z } from 'zod';
 
 export const steamRouter = createTRPCRouter({
-    getSkins : publicProcedure.input(z.string()).query(({ctx,input}) => {
-        return ctx.db.sKINS.findMany({
+    getSkins : publicProcedure.input(z.string()).query( async ({ctx,input}) => {
+        return await ctx.db.sKINS.findMany({
         select:{
             NAME: true,
             GUN_NAME: true
@@ -15,12 +15,14 @@ export const steamRouter = createTRPCRouter({
         },
         })
     }),
-    getAllGunNames : publicProcedure.query(({ctx}) => {
-        return ctx.db.sKINS.findMany({
+    getAllGunNames : publicProcedure.query( async ({ctx}) => {
+        const res = await ctx.db.sKINS.findMany({
             select:{
                 GUN_NAME:true
             },
             distinct:"GUN_NAME"
         });
+        return res;
+
     })
 })
