@@ -6,13 +6,10 @@ import { getLastPathOfUrl } from '~/utils/util';
 export default function Page() {
   const router = useRouter()
   const path = usePathname();
-  const [a,setA]  = useState("a");
-  if (path !== null && a !== "hello"){
-      setA("hello");
-      console.log("hello");
-  }else if (a !== "ollo"){
-      setA("ollo");
-      console.log("ollo");
+  if (path !== null){
+      const gunName = getLastPathOfUrl(path);
+      return <div>{gunName}</div>;
+  }else{
+      return <div>error</div>;
   }
-  return <div>hello:{a}</div>;
 }

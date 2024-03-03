@@ -11,12 +11,12 @@ export function getLastPathOfUrl(url : string):string{
         // this means that the url does not contain "/" characters, so we are either at root or the url is invalid
         return "/ROOT";
     }
-    idxOfFirstSlash++; // move to the right of "/"
     let out = "";
     while(url[idxOfFirstSlash] !== "?" && idxOfFirstSlash < url.length){
         if (url.at(idxOfFirstSlash) !== undefined){
             out +=  url?.at(idxOfFirstSlash);
         }
+        idxOfFirstSlash++;
     }
     return out;
 }
