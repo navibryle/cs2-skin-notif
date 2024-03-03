@@ -20,3 +20,20 @@ export function getLastPathOfUrl(url : string):string{
     }
     return out;
 }
+
+export function convertToDbForm(frontEndString:string){
+    return frontEndString.replace(" ","_");
+}
+
+export function convertToFrontEndForm(dbString:string){
+    return dbString.replace("_"," ");
+}
+
+export function idGen(){
+    return (Math.random()*Math.pow(2,31));
+}
+
+// the gunName and skinName must be in db form
+export function getPathToPic(gunName:string,skinName:string){
+    return "/Skins".concat("/").concat(gunName).concat("/Factory_New").concat("/").concat(skinName).concat(".png");
+}

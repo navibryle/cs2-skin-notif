@@ -2,6 +2,7 @@ import { Grid } from "@mui/material";
 import { api } from "~/utils/api";
 import GridEntry from "./GridEntry";
 import { type Dispatch, type SetStateAction } from "react";
+import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 
 export default function SkinGrid(props :{
         hasQueryResState:{hasQueryRes:boolean,setHasQueryRes:Dispatch<SetStateAction<boolean>>}
@@ -25,10 +26,10 @@ export default function SkinGrid(props :{
         {skinList?.map((skin) =>(
             /*Need to use the GUN_NAME from database here since gun name doesn't always match the case sensitivity of the folder names*/
             <GridEntry 
-                key={skin.NAME.concat(skin.GUN_NAME).concat((Math.random()*Math.pow(2,31)).toString())} 
-                gunName={skin.GUN_NAME.replace("_"," ")} 
-                skinName ={skin.NAME.replace("_"," ")} 
-                gunPic={"/Skins".concat("/").concat(skin.GUN_NAME).concat("/Factory_New").concat("/").concat(skin.NAME).concat(".png")}
+                key={skin.NAME.concat(skin.GUN_NAME).concat(idGen().toString())} 
+                gunName={convertToFrontEndForm(skin.GUN_NAME)} 
+                skinName ={convertToFrontEndForm(skin.NAME)} 
+                gunPic={getPathToPic(skin.GUN_NAME,skin.NAME)}
             />
             )
         )}

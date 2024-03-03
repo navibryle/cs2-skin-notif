@@ -1,15 +1,36 @@
-import { usePathname } from 'next/navigation'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react';
-import { getLastPathOfUrl } from '~/utils/util';
+import assert from 'assert';
+import Image from "next/image";
+import { usePathname } from 'next/navigation';
+import { convertToDbForm, getLastPathOfUrl, getPathToPic } from '~/utils/util';
  
 export default function Page() {
-  const router = useRouter()
   const path = usePathname();
   if (path !== null){
-      const gunName = getLastPathOfUrl(path);
-      return <div>{gunName}</div>;
-  }else{
+      let [gunName,skinName] = getLastPathOfUrl(path).split("_");
+      if (gunName === undefined || skinName === undefined){
+          throw Error("wtf");
+      }
+      gunName = convertToDbForm(decodeURI(gunName));
+      skinName = convertToDbForm(decodeURI(skinName));
+      console.log(getPathToPic(gunName,skinName));
+      assert(gunName.length > 0,"No gun was selected");
+      return (
+        <div className="h-lvh">
+            <div className="flex flex-row h-full">
+                <div className="flex flex-1 flex-col justify-center">
+                    <div id ="pic" >
+                        <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700}/>
+                    </div>
+                </div>
+                <div className="flex flex-1 flex-col justify-center">
+                    <div>
+                        display the current api prices here
+                    </div>
+                </div>
+            </div>
+        </div>
+      )  
+      }else{
       return <div>error</div>;
   }
 }
