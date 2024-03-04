@@ -1,8 +1,5 @@
 
 export function getLastPathOfUrl(url : string):string{
-    console.warn("DEBUGPRINT[5]: util.ts:2 (after export function getLastPathOfUrl(url : s…)")
-    console.log(url);
-    console.warn("DEBUGPRINT[6]: util.ts:4 (after console.log(url);)")
     let idxOfFirstSlash = -1;
     for (let i = url.length - 1; i > -1 && url[i] !== "/";i--){
         idxOfFirstSlash = i;
