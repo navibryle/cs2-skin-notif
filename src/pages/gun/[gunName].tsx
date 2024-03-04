@@ -1,8 +1,9 @@
 import assert from 'assert';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
+import { use } from 'react';
+import SkinPriceContainer from '~/components/SkinPriceContainer';
 import { convertToDbForm, getLastPathOfUrl, getPathToPic } from '~/utils/util';
- 
 export default function Page() {
   const path = usePathname();
   if (path !== null){
@@ -12,10 +13,10 @@ export default function Page() {
       }
       gunName = convertToDbForm(decodeURI(gunName));
       skinName = convertToDbForm(decodeURI(skinName));
-      console.log(getPathToPic(gunName,skinName));
       assert(gunName.length > 0,"No gun was selected");
       return (
         <div className="h-lvh">
+            <SkinPriceContainer/>
             <div className="flex flex-row h-full">
                 <div className="flex flex-1 flex-col justify-center">
                     <div id ="pic" >
@@ -31,6 +32,6 @@ export default function Page() {
         </div>
       )  
       }else{
-      return <div>error</div>;
+          return <div>error</div>;
   }
 }
