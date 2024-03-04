@@ -2,7 +2,6 @@ import assert from 'assert';
 import { type NextPageContext } from 'next';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
-import SuperJSON from 'superjson';
 import { convertToDbForm, convertToFrontEndForm, getLastPathOfUrl, getPathToPic } from '~/utils/util';
 
 type Prices = {
@@ -80,7 +79,7 @@ export default function Page(props: Prices) {
             </div>
         </div>
       )  
-      }else{
-          return <div>error</div>;
+  }else{
+      return <div>error</div>;
   }
 }
