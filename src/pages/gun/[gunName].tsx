@@ -2,6 +2,7 @@ import assert from 'assert';
 import { type NextPageContext } from 'next';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
 import { convertToDbForm, convertToFrontEndForm, getLastPathOfUrl, getPathToPic } from '~/utils/util';
 
 type Prices = {
@@ -28,12 +29,28 @@ function getNamesFormUrl(path :string){
 async function getMarketPrice(gunName:string,skinName:string,marketTier:string){
     marketTier = " ("+marketTier+")";
    const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name=".concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier));
-   const {lowest_price} = await steamData.json() as {lowest_price:string};
-   return lowest_price;
+   const {lowest_price} = await steamData.json() as {lowest_price:Promise<string>};
+   return await lowest_price;
+}
+
+function validatePrice(price :string){
+    if (price === undefined){
+        return "Unknown";
+    }
+    return price;
+}
+
+function validatePrices(prices :Prices) : Prices{
+    return {
+        fNew : validatePrice(prices.fNew),
+        fTesteted : validatePrice(prices.fTesteted),
+        minWear: validatePrice(prices.minWear),
+        wellWorn: validatePrice(prices.wellWorn),
+        bScarred: validatePrice(prices.bScarred)
+    }
 }
 
 export async function getServerSideProps(context:NextPageContext){
-
     if (context.req?.url === undefined){
         throw Error("wtf");
     }
@@ -49,8 +66,9 @@ export async function getServerSideProps(context:NextPageContext){
         fTesteted: await pricesRes[1]!,
         minWear: await pricesRes[2]!,
         wellWorn: await pricesRes[3]!,
-        bScarred: await pricesRes[4]!};
-    return {props:prices};
+        bScarred: await pricesRes[4]!
+    };
+    return {props:validatePrices(prices)};
 }
 export default function Page(props: Prices) {
   const path = usePathname();
@@ -69,11 +87,11 @@ export default function Page(props: Prices) {
                         <h1>Steam Prices</h1>
                     </div>
                     <div>
-                        Factory New: {props.fNew}<br/>
-                        Minimal Wear: {props.minWear}<br/>
-                        Field-Tested: {props.fTesteted}<br/>
-                        Well-Worn: {props.wellWorn}<br/>
-                        Battle-Scarred: {props.bScarred}
+                        Factory New: {props?.fNew}<br/>
+                        Minimal Wear: {props?.minWear}<br/>
+                        Field-Tested: {props?.fTesteted}<br/>
+                        Well-Worn: {props?.wellWorn}<br/>
+                        Battle-Scarred: {props?.bScarred}
                     </div>
                 </div>
             </div>

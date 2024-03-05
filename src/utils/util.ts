@@ -1,3 +1,6 @@
+import { type Dispatch, type SetStateAction } from "react";
+import { type StackEntry } from "./types";
+
 
 export function getLastPathOfUrl(url : string):string{
     let idxOfFirstSlash = -1;
@@ -18,6 +21,20 @@ export function getLastPathOfUrl(url : string):string{
     return out;
 }
 
+export function getPath(url : string) : string{
+    let idxOfFirstSlash = -1;
+
+    for (;idxOfFirstSlash < url.length && url[idxOfFirstSlash] !== "/";idxOfFirstSlash++){
+    }
+
+    if (idxOfFirstSlash == url.length){
+        // we are at root
+        return "/";
+    }
+
+    return url.substring(idxOfFirstSlash);
+}
+
 export function convertToDbForm(frontEndString:string){
     return frontEndString.replace(" ","_");
 }
@@ -34,3 +51,15 @@ export function idGen(){
 export function getPathToPic(gunName:string,skinName:string){
     return "/Skins".concat("/").concat(gunName).concat("/Factory_New").concat("/").concat(skinName).concat(".png");
 }
+
+export function popStack(pageStack: Array<StackEntry>,setPageStack:Dispatch<SetStateAction<Array<StackEntry>>>){
+  pageStack.pop();
+  setPageStack(pageStack);
+}
+
+export function pushStack(pageStack :Array<StackEntry>,setPageStack :Dispatch<SetStateAction<Array<StackEntry>>>,entry :StackEntry){
+  pageStack.push(entry);
+  setPageStack(pageStack);
+}
+
+

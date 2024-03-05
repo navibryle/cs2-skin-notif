@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string}){
   const { push } = useRouter();
-
   return (
     <>
       <Grid item xs={10} md={2} >
