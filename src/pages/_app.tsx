@@ -1,10 +1,10 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { Breadcrumb } from "~/components/Breadcrumb";
 import { api } from "~/utils/api";
-
+import MenuIcon from '@mui/icons-material/Menu';
 import "~/styles/globals.css";
+import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
 
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -13,7 +13,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Breadcrumb/>
+    <AppBar position="static">
+        <Toolbar>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
       <Component {...pageProps} />
     </SessionProvider>
   );

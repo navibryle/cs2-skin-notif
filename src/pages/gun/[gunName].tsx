@@ -6,11 +6,11 @@ import { useContext } from 'react';
 import { convertToDbForm, convertToFrontEndForm, getLastPathOfUrl, getPathToPic } from '~/utils/util';
 
 type Prices = {
-    fNew: string;
-    fTesteted: string;
-    minWear: string;
-    wellWorn: string;
-    bScarred: string;
+    fNew: string | null;
+    fTesteted: string | null;
+    minWear: string | null;
+    wellWorn: string | null;
+    bScarred: string | null;
 };
 
 function getNamesFormUrl(path :string){
@@ -29,12 +29,12 @@ function getNamesFormUrl(path :string){
 async function getMarketPrice(gunName:string,skinName:string,marketTier:string){
     marketTier = " ("+marketTier+")";
    const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name=".concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier));
-   const {lowest_price} = await steamData.json() as {lowest_price:Promise<string>};
+   const {lowest_price} = await steamData.json() as {lowest_price:Promise<string> | null};
    return await lowest_price;
 }
 
-function validatePrice(price :string){
-    if (price === undefined){
+function validatePrice(price :string | null){
+    if (price === undefined || price === null){
         return "Unknown";
     }
     return price;
@@ -55,7 +55,7 @@ export async function getServerSideProps(context:NextPageContext){
         throw Error("wtf");
     }
     const marketTiers = ["Factory New","Field-Tested","Minimal Wear","Well-Worn","Battle-Scarred"];
-    const pricesRes : Array<Promise<string>> = [];
+    const pricesRes : Array<Promise<string | null>> = [];
     const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
     for (const i of marketTiers ){
         pricesRes.push(getMarketPrice(gunName,skinName,i));
