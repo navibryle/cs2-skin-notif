@@ -2,7 +2,7 @@ import assert from 'assert';
 import { type NextPageContext } from 'next';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
 import { convertToDbForm, convertToFrontEndForm, getLastPathOfUrl, getPathToPic } from '~/utils/util';
 
 type Prices = {
@@ -28,7 +28,15 @@ function getNamesFormUrl(path :string){
 
 async function getMarketPrice(gunName:string,skinName:string,marketTier:string){
     marketTier = " ("+marketTier+")";
-   const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name=".concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier));
+   const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name=".concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier),
+   {
+  method: "GET",
+  mode: "cors",
+  headers: {
+    "Access-Control-Allow-Origin":"true",
+    "X-PINGOTHER": "pingpong",
+  },
+});
    const {lowest_price} = await steamData.json() as {lowest_price:Promise<string> | null};
    return await lowest_price;
 }
@@ -51,27 +59,49 @@ function validatePrices(prices :Prices) : Prices{
 }
 
 export async function getServerSideProps(context:NextPageContext){
-    if (context.req?.url === undefined){
-        throw Error("wtf");
-    }
-    const marketTiers = ["Factory New","Field-Tested","Minimal Wear","Well-Worn","Battle-Scarred"];
-    const pricesRes : Array<Promise<string | null>> = [];
-    const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
-    for (const i of marketTiers ){
-        pricesRes.push(getMarketPrice(gunName,skinName,i));
-    }
-    assert(pricesRes.length === 5);
+    // if (context.req?.url === undefined){
+    //     throw Error("wtf");
+    // }
+    // const marketTiers = ["Factory New","Field-Tested","Minimal Wear","Well-Worn","Battle-Scarred"];
+    // const pricesRes : Array<Promise<string | null>> = [];
+    // const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    // for (const i of marketTiers ){
+    //     pricesRes.push(getMarketPrice(gunName,skinName,i));
+    // }
+    // assert(pricesRes.length === 5);
+    // const prices = {
+    //     fNew: await pricesRes[0]!,
+    //     fTesteted: await pricesRes[1]!,
+    //     minWear: await pricesRes[2]!,
+    //     wellWorn: await pricesRes[3]!,
+    //     bScarred: await pricesRes[4]!
+    // };
     const prices = {
-        fNew: await pricesRes[0]!,
-        fTesteted: await pricesRes[1]!,
-        minWear: await pricesRes[2]!,
-        wellWorn: await pricesRes[3]!,
-        bScarred: await pricesRes[4]!
+        fNew: "1",
+        fTesteted: "1",
+        minWear: "1",
+        wellWorn: "1",
+        bScarred: "1"
     };
     return {props:validatePrices(prices)};
 }
+
 export default function Page(props: Prices) {
-  const path = usePathname();
+    const path = usePathname();
+    const marketTiers = ["Factory New","Field-Tested","Minimal Wear","Well-Worn","Battle-Scarred"];
+    const [pricesRes,pricesResSet] :[ Array<Promise<string | null>>,Dispatch<SetStateAction<Array<Promise<string | null>>>>] = useState([] as Array<Promise<string | null>>);
+    const [isLoading,setIsLoading] = useState(true);
+    useEffect(() => {
+        console.log("hello");
+        const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+        const tmp : Array<Promise<string | null>> = [];
+        for (const i of marketTiers ){
+            tmp.push(getMarketPrice(gunName,skinName,i));
+        }
+        pricesResSet(tmp);
+        setIsLoading(false);
+
+    },[]);
   if (path !== null){
       const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
       return (

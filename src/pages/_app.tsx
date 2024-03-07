@@ -1,16 +1,16 @@
+import { AppBar, Button, Toolbar } from "@mui/material";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
-import { api } from "~/utils/api";
-import MenuIcon from '@mui/icons-material/Menu';
 import "~/styles/globals.css";
-import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
+import { api } from "~/utils/api";
 
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+
   return (
     <SessionProvider session={session}>
     <AppBar position="static">
