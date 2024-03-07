@@ -5,6 +5,13 @@ CREATE TABLE IF NOT EXISTS SKINS (
     PRIMARY KEY(ID)
 );
 
+CREATE TABLE IF NOT EXISTS BITSKINS (
+    ID INT8, -- this will be the skin id
+    NAME VARCHAR(255) NOT NULL, -- this will be the bitskins generated name
+    AVG_PRICE INT8 NOT NULL,
+    PRIMARY KEY(ID)
+);
+
 -- TODO: data is incomplete, got rate limited for the day. Try again a diff day
 INSERT INTO SKINS (ID,NAME,GUN_NAME) VALUES (0,'Red_Quartz','Tec-9');
 INSERT INTO SKINS (ID,NAME,GUN_NAME) VALUES (1,'Urban_Rubble','Desert_Eagle');

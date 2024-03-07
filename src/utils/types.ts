@@ -12,5 +12,11 @@ export type StackEntry = {
     title:string;
     href:string;
 }
-
-
+export type BitskinEntry = {
+    name: string;
+    price_avg: number,
+    price_max: number,
+    price_min: number,
+    quantity: number,
+    skin_id: number
+}
