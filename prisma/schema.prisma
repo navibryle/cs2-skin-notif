@@ -68,3 +68,14 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model BITSKINS {
+  ID        BigInt @id
+  NAME      String @db.VarChar(255)
+  AVG_PRICE BigInt
+}
+
+model SKINS {
+  ID       BigInt @id
+  NAME     String @db.VarChar(255)
+  GUN_NAME String @db.VarChar(255)
+}

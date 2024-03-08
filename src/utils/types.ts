@@ -1,3 +1,4 @@
+import {z} from 'zod';
 export type Prices = {
     fNew: string | null;
     fTesteted: string | null;
@@ -20,3 +21,14 @@ export type BitskinEntry = {
     quantity: number,
     skin_id: number
 }
+
+export const BitskinEntryZodSchema = z.object(
+    {
+        name:z.string(),
+        price_avg: z.number(),
+        price_max: z.number(),
+        price_min: z.number(),
+        quantity: z.number(),
+        skin_id: z.number(),
+    }
+)
