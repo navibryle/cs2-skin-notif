@@ -10,7 +10,7 @@ export default function SkinGrid(props :{
         gunName:string
     }){
 
-    const skins = api.skins.getSkins.useQuery(props.gunName.replace(" ","_"));
+    const skins = api.steam.getSkins.useQuery(props.gunName.replace(" ","_"));
 
     if (skins.isLoading){
         return <div>Loading</div>

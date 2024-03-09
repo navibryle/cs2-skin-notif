@@ -16,7 +16,7 @@ export default function SearchBar(props:{
     setInput:Dispatch<SetStateAction<string>>
   }){
 
-  const gunData = api.skins.getAllGunNames.useQuery();
+  const gunData = api.steam.getAllGunNames.useQuery();
   const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
 
   const onSearchInput = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {

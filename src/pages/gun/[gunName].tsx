@@ -2,6 +2,7 @@ import assert from 'assert';
 import { type NextPageContext } from 'next';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
+import { bitskinsPrice } from '~/services/bitskinsService';
 import { getNamesFormUrl, steamPrice } from '~/services/steamService';
 import { type GetSkinPrice, type Prices } from '~/utils/types';
 import { getPathToPic } from '~/utils/util';
@@ -12,6 +13,7 @@ export async function getServerSideProps(context:NextPageContext){
         throw Error("wtf");
     }
     const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    await bitskinsPrice(gunName,skinName);
     const marketList: Array<GetSkinPrice> = [steamPrice];
     assert(marketList[0] !== undefined);
     return { props:marketList[0](gunName,skinName)};

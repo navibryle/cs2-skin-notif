@@ -1,6 +1,7 @@
 import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { steamRouter } from "./routers/steam";
+import { bitskinsRouter } from "./routers/bitskins";
 
 /**
  * This is the primary router for your server.
@@ -9,7 +10,8 @@ import { steamRouter } from "./routers/steam";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
-  skins: steamRouter
+  steam: steamRouter,
+  bitskins: bitskinsRouter 
 });
 
 // export type definition of API
