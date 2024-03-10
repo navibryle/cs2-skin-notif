@@ -28,8 +28,21 @@ export const synchronizedBitskinPrices = async () => {
     }
 }
 
+const addDecimalPoint = (num:string) => {
+    if (num.length <= 3){
+        while(num.length <= 3){
+            num = "0"+num;
+        }
+    }
+    return num.slice(0,-3)+"."+num.slice(-3);
+}
+
+
 const getTierfromMap = (priceMap: Map<string,bigint>,tier: string) : string => {
-    return priceMap.get(tier)?.toString() ?? "unknown";
+    if (priceMap.has(tier)){
+        return "$"+addDecimalPoint(priceMap.get(tier)?.toString() ?? "Unknown")+" USD";
+    }
+    return "No listings";
 }
 
 export const bitskinsPrice : GetSkinPrice = async (gunName :string, skinName :string) =>{

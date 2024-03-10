@@ -13,24 +13,23 @@ export async function getServerSideProps(context:NextPageContext){
         throw Error("wtf");
     }
     let [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+
     if (skinName.includes(".json")){
         skinName = skinName.replace(".json","");
     }
     await bitskinsPrice(gunName,skinName);
     const marketList: Array<GetSkinPrice> = [steamPrice,bitskinsPrice];
-    assert(marketList[0] !== undefined);
-    assert(marketList[1] !== undefined);
+
     const tmp = { 
         props:{
-            steam:await marketList[0](gunName,skinName),
-            bitskins:await marketList[1](gunName,skinName)
+            steam:await marketList[0]!(gunName,skinName),
+            bitskins:await marketList[1]!(gunName,skinName)
             }
         };
     return tmp;
 }
 
 export default function Page(props: {steam:Prices,bitskins:Prices}) {
-    console.warn("DEBUGPRINT[13]: [gunName].tsx:28 (after export default function Page(props: stea…)")
   const path = usePathname();
   if (path !== null){
       const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown

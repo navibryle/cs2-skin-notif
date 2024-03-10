@@ -6,7 +6,6 @@ export const bitskinsRouter = createTRPCRouter({
     synchronize : publicProcedure.query(
         async () => {
             await synchronizedBitskinPrices();
-            return "hello";
         }
     ),
     getSkin:publicProcedure.input(z.object({gunName:z.string(),skinName:z.string()})).query(
