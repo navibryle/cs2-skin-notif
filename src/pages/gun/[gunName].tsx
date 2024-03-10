@@ -26,7 +26,6 @@ export async function getServerSideProps(context:NextPageContext){
             bitskins:await marketList[1](gunName,skinName)
             }
         };
-    console.log(tmp);
     return tmp;
 }
 
