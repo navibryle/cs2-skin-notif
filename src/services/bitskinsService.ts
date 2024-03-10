@@ -1,9 +1,9 @@
 import { db } from "~/server/db";
-import { type BitskinEntry, type GetSkinPrice,type Prices } from "~/utils/types";
+import { type BitskinEntry, type GetSkinPrice, type Prices } from "~/utils/types";
+import { marketTiers } from "./constants";
 
 
 export const synchronizedBitskinPrices = async () => {
-    console.warn("DEBUGPRINT[3]: bitskinsService.ts:24 (after export const synchronizedBitskinPrices =…)")
     const bitskinsData = await fetch("https://api.bitskins.com/market/insell/730", {
       "headers": {
         "content-type": "application/json",
@@ -28,9 +28,12 @@ export const synchronizedBitskinPrices = async () => {
     }
 }
 
+const getTierfromMap = (priceMap: Map<string,bigint>,tier: string) : string => {
+    return priceMap.get(tier)?.toString() ?? "unknown";
+}
 
 export const bitskinsPrice : GetSkinPrice = async (gunName :string, skinName :string) =>{
-    console.log(await db.bITSKINS.findMany({
+    const prices: Array<{NAME:string,AVG_PRICE:bigint}> = await db.bITSKINS.findMany({
                 select:{
                     NAME:true,
                     AVG_PRICE:true,
@@ -49,13 +52,23 @@ export const bitskinsPrice : GetSkinPrice = async (gunName :string, skinName :st
                         }
                     ]
                 }
-            }))
+            })
+    const priceMap = new Map<string,bigint>();
+    for (const item of prices){
+        for (const tier of marketTiers){
+            if (item.NAME.toLowerCase().toLowerCase().includes(tier.toLowerCase())){
+                priceMap.set(tier,item.AVG_PRICE);
+            }
+        }
+    }
     const tmp: Prices = {
-        fNew:"1",
-        fTesteted:"1",
-        wellWorn:"1",
-        bScarred:"1",
-        minWear:"1"
+        fNew:getTierfromMap(priceMap,marketTiers[0]!),
+        fTesteted:getTierfromMap(priceMap,marketTiers[1]!),
+        wellWorn:getTierfromMap(priceMap,marketTiers[2]!),
+        bScarred:getTierfromMap(priceMap,marketTiers[3]!),
+        minWear:getTierfromMap(priceMap,marketTiers[4]!)
     };
+    console.warn("DEBUGPRINT[15]: bitskinsService.ts:70 (after ;)")
+    console.log(tmp);
     return tmp;
 }

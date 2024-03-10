@@ -12,14 +12,26 @@ export async function getServerSideProps(context:NextPageContext){
     if (context.req?.url === undefined){
         throw Error("wtf");
     }
-    const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    let [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    if (skinName.includes(".json")){
+        skinName = skinName.replace(".json","");
+    }
     await bitskinsPrice(gunName,skinName);
-    const marketList: Array<GetSkinPrice> = [steamPrice];
+    const marketList: Array<GetSkinPrice> = [steamPrice,bitskinsPrice];
     assert(marketList[0] !== undefined);
-    return { props:marketList[0](gunName,skinName)};
+    assert(marketList[1] !== undefined);
+    const tmp = { 
+        props:{
+            steam:await marketList[0](gunName,skinName),
+            bitskins:await marketList[1](gunName,skinName)
+            }
+        };
+    console.log(tmp);
+    return tmp;
 }
 
-export default function Page(props: Prices) {
+export default function Page(props: {steam:Prices,bitskins:Prices}) {
+    console.warn("DEBUGPRINT[13]: [gunName].tsx:28 (after export default function Page(props: stea…)")
   const path = usePathname();
   if (path !== null){
       const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
@@ -36,11 +48,22 @@ export default function Page(props: Prices) {
                         <h1>Steam Prices</h1>
                     </div>
                     <div>
-                        Factory New: {props?.fNew}<br/>
-                        Minimal Wear: {props?.minWear}<br/>
-                        Field-Tested: {props?.fTesteted}<br/>
-                        Well-Worn: {props?.wellWorn}<br/>
-                        Battle-Scarred: {props?.bScarred}
+                        Factory New: {props.steam?.fNew}<br/>
+                        Minimal Wear: {props.steam?.minWear}<br/>
+                        Field-Tested: {props.steam?.fTesteted}<br/>
+                        Well-Worn: {props.steam?.wellWorn}<br/>
+                        Battle-Scarred: {props.steam?.bScarred}
+                    </div>
+                    <br/>
+                    <div>
+                        <h1>Bitskins prices</h1>
+                    </div>
+                    <div>
+                        Factory New: {props.bitskins?.fNew}<br/>
+                        Minimal Wear: {props.bitskins?.minWear}<br/>
+                        Field-Tested: {props.bitskins?.fTesteted}<br/>
+                        Well-Worn: {props.bitskins?.wellWorn}<br/>
+                        Battle-Scarred: {props.bitskins?.bScarred}
                     </div>
                 </div>
             </div>

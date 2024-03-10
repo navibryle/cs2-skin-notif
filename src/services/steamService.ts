@@ -16,7 +16,9 @@ export const steamPrice : GetSkinPrice = async (gunName :string, skinName :strin
         wellWorn: await pricesRes[3]!,
         bScarred: await pricesRes[4]!
     };
-    return validatePrices(prices);
+    const tmp =  validatePrices(prices);
+    console.log(tmp);
+    return tmp;
 }
 
 export function getNamesFormUrl(path :string){
@@ -27,6 +29,9 @@ export function getNamesFormUrl(path :string){
   if (gunName === undefined || skinName === undefined){
       throw Error("wtf");
   }
+  console.warn("DEBUGPRINT[9]: steamService.ts:32 (after throw Error(wtf);)")
+  console.log(path);
+  console.warn("DEBUGPRINT[10]: steamService.ts:34 (after console.log(path);)")
   gunName = convertToDbForm(decodeURI(gunName));
   skinName = convertToDbForm(decodeURI(skinName));
   return [gunName,skinName]
