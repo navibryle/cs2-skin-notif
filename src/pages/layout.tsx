@@ -1,14 +1,14 @@
 import { Breadcrumb } from "~/components/Breadcrumb";
 
 export default function RootLayout({
-    children
+  children
 }:{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }){
-    return (
-    <div>
-        <Breadcrumb/>
-        {children}
-    </div>
-    );
+  return (
+  <div>
+    <Breadcrumb/>
+    {children}
+  </div>
+  );
 }

@@ -12,14 +12,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
 
   return (
-    <SessionProvider session={session}>
-    <AppBar position="static">
-        <Toolbar>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-      <Component {...pageProps} />
-    </SessionProvider>
+  <SessionProvider session={session}>
+  <AppBar position="static">
+    <Toolbar>
+      <Button color="inherit">Login</Button>
+    </Toolbar>
+    </AppBar>
+    <Component {...pageProps} />
+  </SessionProvider>
   );
 };
 
