@@ -32,3 +32,15 @@ export const BitskinEntryZodSchema = z.object(
     skin_id: z.number(),
   }
 )
+
+export type Login = {
+  username:string,
+  password:string
+}
+
+export const LoginZodSchema = z.object(
+  {
+    name: z.string(),
+    password: z.string()
+  }
+)
