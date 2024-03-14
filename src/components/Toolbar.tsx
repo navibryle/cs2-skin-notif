@@ -1,10 +1,23 @@
 import { AppBar, Button, Toolbar } from "@mui/material";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const logIn = async () => {
   console.warn("DEBUGPRINT[1]: _app.tsx:8 (after const logIn = async () => )")
   console.log(await signIn("google"))
   console.warn("DEBUGPRINT[2]: _app.tsx:10 (after console.log(await signIn(google)))")
+}
+
+
+
+const SignOutBtn = ({isSignedIn} : {isSignedIn: boolean}) => {
+    if (!isSignedIn){
+        return null;
+    }
+    return (
+        <Toolbar className = "ml-auto">
+            <Button color="inherit" onClick={() => signOut()}>Sign Out</Button>
+        </Toolbar>
+    )
 }
 
 const Navbar = () => {
@@ -19,9 +32,12 @@ const Navbar = () => {
     }
     return (
     <AppBar position="static">
-        <Toolbar>
-            {content}
-        </Toolbar>
+        <div className = "flex"> 
+            <Toolbar>
+                {content}
+            </Toolbar>
+            <SignOutBtn isSignedIn={status == "authenticated"}/>
+        </div>
     </AppBar>
     )
 }
