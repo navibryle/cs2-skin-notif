@@ -22,7 +22,7 @@ export default function SkinGrid(props :{
 
   const skinList = skins.data;
   props.hasQueryResState.setHasQueryRes(skinList.length > 0);
-    return <Grid container spacing={5} className="m-1">
+  return (<Grid container spacing={5} className="m-1">
     {skinList?.map((skin) =>(
       /*Need to use the GUN_NAME from database here since gun name doesn't always match the case sensitivity of the folder names*/
       <GridEntry 
@@ -33,5 +33,5 @@ export default function SkinGrid(props :{
       />
       )
     )}
-    </Grid>;
+    </Grid>);
 }

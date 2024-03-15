@@ -29,7 +29,7 @@ export async function getServerSideProps(context:NextPageContext){
 
 
 export default function Page(props: {steam:Prices,bitskins:Prices}) {
-  const addToWatchlist = api.watchlist.getWatchlistForUser.useMutation();
+  const addToWatchlist = api.watchlist.addToUsersWatchlist.useMutation();
   const path = usePathname();
   const {data:session,status} = useSession();
   if (path !== null){

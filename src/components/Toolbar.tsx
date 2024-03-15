@@ -1,7 +1,7 @@
-import { AppBar, Button, Toolbar } from "@mui/material";
+import { AppBar, Button, IconButton, Toolbar } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
+import HomeIcon from '@mui/icons-material/Home';
 
 const SignOutBtn = ({isSignedIn} : {isSignedIn: boolean}) => {
     if (!isSignedIn){
@@ -29,6 +29,9 @@ const Navbar = () => {
         <AppBar position="static">
             <div className = "flex"> 
                 <Toolbar>
+                    <IconButton onClick={() => push("/")}>
+                      <HomeIcon/>
+                    </IconButton>
                     {content}
                 </Toolbar>
                 <SignOutBtn isSignedIn={status == "authenticated"}/>
