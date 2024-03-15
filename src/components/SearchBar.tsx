@@ -20,26 +20,25 @@ export default function SearchBar(props:{
   const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
 
   const onSearchInput = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {
-  // reason and event are unused, they are only here to adhere to a type contract
-  props.setInput(value);
+    // reason and event are unused, they are only here to adhere to a type contract
+    props.setInput(value);
   }
   if (gunData.status === "loading"){
-  return (<div>Loading</div>)
+    return (<div>Loading</div>)
   }else if (gunData.status === "success"){
+    const gunNames : Array<{GUN_NAME:string}> | undefined = gunData.data;
+    const gunList:Array<{label:string,key:string}>= [];
+    if (gunNames === undefined){
+      throw Error("wtf");
+    }
+    for (const gun of gunNames){
+      gunList.push({label:gun.GUN_NAME.replace("_"," "),key:(Math.random()*Math.pow(2,31)).toString()});
+    }
 
-  const gunNames : Array<{GUN_NAME:string}> | undefined = gunData.data;
-  const gunList:Array<{label:string,key:string}>= [];
-  if (gunNames === undefined){
-    throw Error("wtf");
-  }
-  for (const gun of gunNames){
-    gunList.push({label:gun.GUN_NAME.replace("_"," "),key:(Math.random()*Math.pow(2,31)).toString()});
-  }
-
-  updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
-
-  const searchBtnClick = () => {
     updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
+
+    const searchBtnClick = () => {
+      updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
   }
 
   return (

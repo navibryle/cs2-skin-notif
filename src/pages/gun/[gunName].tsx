@@ -1,9 +1,11 @@
-import assert from 'assert';
+import { Button } from '@mui/material';
 import { type NextPageContext } from 'next';
+import { useSession } from 'next-auth/react';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
 import { bitskinsPrice } from '~/services/bitskinsService';
 import { getNamesFormUrl, steamPrice } from '~/services/steamService';
+import { api } from '~/utils/api';
 import { type GetSkinPrice, type Prices } from '~/utils/types';
 import { getPathToPic } from '~/utils/util';
 
@@ -12,11 +14,7 @@ export async function getServerSideProps(context:NextPageContext){
   if (context.req?.url === undefined){
     throw Error("wtf");
   }
-  let [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
-
-  if (skinName.includes(".json")){
-    skinName = skinName.replace(".json","");
-  }
+  const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
   await bitskinsPrice(gunName,skinName);
   const marketList: Array<GetSkinPrice> = [steamPrice,bitskinsPrice];
 
@@ -29,10 +27,24 @@ export async function getServerSideProps(context:NextPageContext){
   return tmp;
 }
 
+
 export default function Page(props: {steam:Prices,bitskins:Prices}) {
+  const addToWatchlist = api.watchlist.getWatchlistForUser.useMutation();
   const path = usePathname();
+  const {data:session,status} = useSession();
   if (path !== null){
     const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    let addBtn = null
+    if (status == "authenticated"){
+      const email = (session.user && session.user.email) ?? "Unknown";
+      addBtn = (
+        <div>
+          <Button onClick = {() => addToWatchlist.mutate({gunName:gunName,skinName:skinName,email:email})}>
+            Add to watchlist
+          </Button>
+        </div>
+      )
+    }
     return (
     <div className="h-lvh">
       <div className="flex flex-row h-full">
@@ -40,6 +52,7 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
           <div id ="pic" >
             <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700}/>
           </div>
+          {addBtn}
         </div>
         <div className="flex flex-1 flex-col">
           <div>
@@ -68,6 +81,6 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
     </div>
     )  
   }else{
-  return <div>error</div>;
+    return <div>error</div>;
   }
 }

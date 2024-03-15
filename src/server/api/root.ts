@@ -1,7 +1,7 @@
-import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { steamRouter } from "./routers/steam";
 import { bitskinsRouter } from "./routers/bitskins";
+import { watchlistRouter } from "./routers/watchlist";
 
 /**
  * This is the primary router for your server.
@@ -9,9 +9,9 @@ import { bitskinsRouter } from "./routers/bitskins";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: postRouter,
   steam: steamRouter,
-  bitskins: bitskinsRouter 
+  bitskins: bitskinsRouter,
+  watchlist: watchlistRouter
 });
 
 // export type definition of API

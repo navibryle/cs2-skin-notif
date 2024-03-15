@@ -22,25 +22,11 @@ export type BitskinEntry = {
   skin_id: number
 }
 
-export const BitskinEntryZodSchema = z.object(
-  {
-    name:z.string(),
-    price_avg: z.number(),
-    price_max: z.number(),
-    price_min: z.number(),
-    quantity: z.number(),
-    skin_id: z.number(),
-  }
-)
 
-export type Login = {
-  username:string,
-  password:string
-}
-
-export const LoginZodSchema = z.object(
+export const WatchlistCreateQuerySchema = z.object(
   {
-    name: z.string(),
-    password: z.string()
+    skinName:z.string(),
+    gunName:z.string(),
+    email:z.string()
   }
 )

@@ -29,11 +29,11 @@ export function getNamesFormUrl(path :string){
   if (gunName === undefined || skinName === undefined){
     throw Error("wtf");
   }
-  console.warn("DEBUGPRINT[9]: steamService.ts:32 (after throw Error(wtf);)")
-  console.log(path);
-  console.warn("DEBUGPRINT[10]: steamService.ts:34 (after console.log(path);)")
   gunName = convertToDbForm(decodeURI(gunName));
   skinName = convertToDbForm(decodeURI(skinName));
+  if (skinName.includes(".json")){
+    skinName = skinName.replace(".json","");
+  }
   return [gunName,skinName]
 }
 

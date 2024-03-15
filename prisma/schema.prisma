@@ -58,6 +58,7 @@ model User {
   accounts      Account[]
   posts         Post[]
   sessions      Session[]
+  WATCHLIST WATCHLIST[]
 }
 
 model VerificationToken {
@@ -78,4 +79,13 @@ model SKINS {
   ID       BigInt @id
   NAME     String @db.VarChar(255)
   GUN_NAME String @db.VarChar(255)
+  watchlist WATCHLIST[]
+}
+
+model WATCHLIST {
+    ID BigInt @id @default(autoincrement())
+    SKIN_ID BigInt
+    SKIN SKINS @relation(fields: [SKIN_ID], references:[ID])
+    USER_ID String
+    USER User @relation(fields: [USER_ID], references: [id])
 }
