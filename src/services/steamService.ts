@@ -17,7 +17,6 @@ export const steamPrice : GetSkinPrice = async (gunName :string, skinName :strin
     bScarred: await pricesRes[4]!
   };
   const tmp =  validatePrices(prices);
-  console.log(tmp);
   return tmp;
 }
 

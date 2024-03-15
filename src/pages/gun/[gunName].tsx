@@ -38,8 +38,8 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
     if (status == "authenticated"){
       const email = (session.user && session.user.email) ?? "Unknown";
       addBtn = (
-        <div>
-          <Button onClick = {() => addToWatchlist.mutate({gunName:gunName,skinName:skinName,email:email})}>
+        <div className="flex justify-center">
+          <Button onClick = {() => addToWatchlist.mutate({gunName:gunName,skinName:skinName,email:email})} >
             Add to watchlist
           </Button>
         </div>

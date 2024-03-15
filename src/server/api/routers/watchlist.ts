@@ -87,11 +87,11 @@ export const watchlistRouter = createTRPCRouter(
       return await ctx.db.wATCHLIST.findMany(
         {
           select:{
-            ID:true,
             SKIN:{
               select:{
                 NAME:true,
                 GUN_NAME:true,
+                ID:true
               }
             }
           },
@@ -103,13 +103,10 @@ export const watchlistRouter = createTRPCRouter(
         }
       )
     }),
-    removeWatchlist: publicProcedure.input(z.bigint()).mutation(async ({ctx,input}) => {
-      console.warn("DEBUGPRINT[1]: watchlist.ts:106 (after removeWatchlist: publicProcedure.input(z…)")
-      console.log(input);
-      console.warn("DEBUGPRINT[2]: watchlist.ts:108 (after console.log(input);)")
+    removeWatchlist: publicProcedure.input(z.object({skinId:z.bigint(),userId:z.string()})).mutation(async ({ctx,input}) => {
       return await ctx.db.wATCHLIST.delete({
         where:{
-          ID:input
+          SKIN_ID_USER_ID: {USER_ID:input.userId,SKIN_ID:input.skinId}
         }
       })
     })

@@ -81,7 +81,5 @@ export const bitskinsPrice : GetSkinPrice = async (gunName :string, skinName :st
     bScarred:getTierfromMap(priceMap,marketTiers[3]!),
     minWear:getTierfromMap(priceMap,marketTiers[4]!)
   };
-  console.warn("DEBUGPRINT[15]: bitskinsService.ts:70 (after ;)")
-  console.log(tmp);
   return tmp;
 }

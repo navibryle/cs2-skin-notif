@@ -83,9 +83,10 @@ model SKINS {
 }
 
 model WATCHLIST {
-    ID BigInt @id @default(autoincrement())
     SKIN_ID BigInt
     SKIN SKINS @relation(fields: [SKIN_ID], references:[ID])
     USER_ID String
     USER User @relation(fields: [USER_ID], references: [id])
+
+    @@id([SKIN_ID,USER_ID])
 }
