@@ -40,29 +40,19 @@ export default function WatchlistGrid(props:{
     // TODO: create new grid that fetches a list of guns
     skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID});
   }
-  console.warn("DEBUGPRINT[1]: WatchlistGrid.tsx:42 (after skinList.push(gunName:i.SKIN.GUN_NAME,sk…)")
-  console.log(shouldLoad);
-  console.log(skinList);
-  console.warn("DEBUGPRINT[2]: WatchlistGrid.tsx:44 (after console.log(shouldLoad);)")
   return (
   <Grid container spacing={5} className="m-1">
     {skinList.map(
       (skin) =>(
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          key={skin.skinName.concat(skin.gunName).concat(idGen().toString())}
-          open={shouldLoad}
-        >
           <GridEntry
+            key={skin.skinName.concat(skin.gunName).concat(idGen().toString())}
             gunName={convertToFrontEndForm(skin.gunName)}
             skinName={convertToFrontEndForm(skin.skinName)}
             gunPic={getPathToPic(skin.gunName,skin.skinName)}>
             <RemoveWatchlist id={props.id} skinId={skin.id} setShoudLoad={setShouldLoad}/>
           </GridEntry>
-          <CircularProgress color="inherit" />
-        </Backdrop>
+        )
       )
-    )
     }
   </Grid>)
 }
