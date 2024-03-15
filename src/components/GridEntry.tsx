@@ -1,13 +1,9 @@
 import { Card, CardActionArea, CardContent, CardMedia, Grid } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string}){
   const { push } = useRouter();
-  console.warn("DEBUGPRINT[3]: GridEntry.tsx:7 (after const  push  = useRouter();)")
-  console.log(props.skinName);
-  console.warn("DEBUGPRINT[4]: GridEntry.tsx:8 (after console.warn(DEBUGPRINT[3]: GridEntry.ts…)")
   return (
   <>
     <Grid item xs={10} md={2} >

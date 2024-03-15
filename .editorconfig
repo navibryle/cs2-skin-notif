@@ -1,5 +1,5 @@
 root = true
-[*.{ts,js,py,sql}]
+[*.{ts,js,py,sql,tsx}]
 end_of_line = lf
 insert_final_newline = false
 charset = utf-8
