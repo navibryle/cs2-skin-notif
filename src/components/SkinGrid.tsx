@@ -30,6 +30,8 @@ export default function SkinGrid(props :{
         gunName={convertToFrontEndForm(skin.GUN_NAME)} 
         skinName ={convertToFrontEndForm(skin.NAME)} 
         gunPic={getPathToPic(skin.GUN_NAME,skin.NAME)}
+        shouldLoad={true}
+        isRemovable={false}
       />
       )
     )}

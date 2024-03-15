@@ -11,7 +11,7 @@ const RemoveWatchlist = (props:{
   setShoudLoad:Dispatch<SetStateAction<boolean>>
 }) => {
   const removeWatchlist = api.watchlist.removeWatchlist.useMutation();
-  props.setShoudLoad(removeWatchlist.isLoading);
+  props.setShoudLoad(!removeWatchlist.isLoading);
   return (<CardActionArea onClick = { () => removeWatchlist.mutate({skinId:props.skinId,userId:props.id})}>
     <div className="flex justify-center bg-red-800">
       <DeleteIcon/>
@@ -24,7 +24,7 @@ export default function WatchlistGrid(props:{
   id:string
 }){
   const res = api.watchlist.getUserWatchlist.useQuery(props.id);
-  const [shouldLoad,setShouldLoad] = useState(false);
+  const [shouldLoad,setShouldLoad] = useState(true);
 
   if (res.status == "loading"){
     // TODO: add cool loading screen
@@ -48,7 +48,12 @@ export default function WatchlistGrid(props:{
             key={skin.skinName.concat(skin.gunName).concat(idGen().toString())}
             gunName={convertToFrontEndForm(skin.gunName)}
             skinName={convertToFrontEndForm(skin.skinName)}
-            gunPic={getPathToPic(skin.gunName,skin.skinName)}>
+            gunPic={getPathToPic(skin.gunName,skin.skinName)}
+            shouldLoad={shouldLoad}
+            isRemovable={true}
+            skinId={skin.id}
+            id={props.id}
+            >
             <RemoveWatchlist id={props.id} skinId={skin.id} setShoudLoad={setShouldLoad}/>
           </GridEntry>
         )
