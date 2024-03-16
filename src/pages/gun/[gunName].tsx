@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button,CircularProgress } from '@mui/material';
 import { type NextPageContext } from 'next';
 import { useSession } from 'next-auth/react';
 import Image from "next/image";
@@ -27,24 +27,77 @@ export async function getServerSideProps(context:NextPageContext){
   return tmp;
 }
 
+function AddBtn(props:{gunName:string,skinName:string,id:string}){
+  const addToWatchlist = api.watchlist.addToUsersWatchlist.useMutation();
+  return (
+      <div className="flex justify-center">
+          {
+            addToWatchlist.status == "idle" && 
+            <Button onClick = {() => addToWatchlist.mutate({...props})} >
+              Add to watchlist
+            </Button>
+          }
+          {
+            addToWatchlist.status == "loading" && 
+            <CircularProgress/>
+          }
+          {
+            addToWatchlist.status == "success" &&
+            <div>
+              {/*TODO: make this text green*/}
+              Added to watchlist
+            </div>
+          }
+          {
+            addToWatchlist.status == "error" &&
+            <div>
+              {/*TODO: make this text red*/}
+              Could not add to watchlist
+            </div>
+          }
+        
+      </div>
+  )
+}
+
+function AlreadyOnWatchlist(){
+  // TODO: make the text pop
+  return (
+    <div className="flex justify-center">
+      Already Added
+    </div>
+  )
+}
+
+function WatchlistOption(props:{gunName:string,skinName:string,id:string}){
+  const gunOnUserWatchlist = api.watchlist.userHasGunOnWatchlist.useQuery(props)
+  if (gunOnUserWatchlist.isLoading){
+    return (
+    <div>
+      <CircularProgress/>
+    </div>)
+  }
+  if (gunOnUserWatchlist.isError){
+    return (
+      <div>
+        {/*TODO: throw cool error component here*/}
+        ERROR
+      </div>
+    )
+  }
+  return (
+      <div>
+        {gunOnUserWatchlist.data?.SKIN_ID != undefined ? <AlreadyOnWatchlist/> : <AddBtn {...props} />}
+      </div>
+  )
+}
+
 
 export default function Page(props: {steam:Prices,bitskins:Prices}) {
-  const addToWatchlist = api.watchlist.addToUsersWatchlist.useMutation();
   const path = usePathname();
   const {data:session,status} = useSession();
   if (path !== null){
     const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
-    let addBtn = null
-    if (status == "authenticated"){
-      const email = (session.user && session.user.email) ?? "Unknown";
-      addBtn = (
-        <div className="flex justify-center">
-          <Button onClick = {() => addToWatchlist.mutate({gunName:gunName,skinName:skinName,email:email})} >
-            Add to watchlist
-          </Button>
-        </div>
-      )
-    }
     return (
     <div className="h-lvh">
       <div className="flex flex-row h-full">
@@ -52,7 +105,7 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
           <div id ="pic" >
             <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700}/>
           </div>
-          {addBtn}
+          {status == "authenticated" && <WatchlistOption skinName={skinName} gunName={gunName} id={session.user.id} />}
         </div>
         <div className="flex flex-1 flex-col">
           <div>

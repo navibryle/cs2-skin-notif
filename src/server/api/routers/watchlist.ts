@@ -77,7 +77,7 @@ export const watchlistRouter = createTRPCRouter(
           {
             data:{
               SKIN_ID: await getSkinId(input.skinName,input.gunName,ctx),
-              USER_ID: await getUser(input.email,ctx),
+              USER_ID: input.id,
             }
           }
         )
@@ -107,6 +107,20 @@ export const watchlistRouter = createTRPCRouter(
       return await ctx.db.wATCHLIST.delete({
         where:{
           SKIN_ID_USER_ID: {USER_ID:input.userId,SKIN_ID:input.skinId}
+        }
+      })
+    }),
+    userHasGunOnWatchlist: publicProcedure.input(z.object({skinName:z.string(),gunName:z.string(),id:z.string()})).query( async ({ctx,input}) => {
+      return await ctx.db.wATCHLIST.findFirst({
+        select:{
+          SKIN_ID:true
+        },
+        where:{
+          USER_ID:input.id,
+          SKIN:{
+            NAME:input.skinName,
+            GUN_NAME:input.gunName
+          }
         }
       })
     })

@@ -27,6 +27,6 @@ export const WatchlistCreateQuerySchema = z.object(
   {
     skinName:z.string(),
     gunName:z.string(),
-    email:z.string()
+    id:z.string()
   }
 )

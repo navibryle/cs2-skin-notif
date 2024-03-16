@@ -18,6 +18,7 @@ const RemoveWatchlist = (props:{
     </div>
   </CardActionArea>);
 }
+
 function Loading(props: {gunName: string,skinName: string, gunPic:string}){
     return (
     <Grid item xs={10} md={2}>
@@ -28,8 +29,7 @@ function Loading(props: {gunName: string,skinName: string, gunPic:string}){
                 <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)} width={300} height={300}/>
               </CardMedia>
               <CardContent>
-                 {props.skinName}
-              </CardContent>
+                 {props.skinName} </CardContent>
             </CardActionArea>
         </Card>
     </Grid>
@@ -37,16 +37,11 @@ function Loading(props: {gunName: string,skinName: string, gunPic:string}){
 }
 
 function Loaded(props: {gunName: string,skinName: string, gunPic:string,isRemovable:boolean,id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>}){
-  let removeButton = null;
-  if (props.isRemovable){
-    removeButton = <RemoveWatchlist id={props.id!} skinId={props.skinId!} setShoudLoad={props.setShouldLoad!}/>;
-  }
-  
   const { push } = useRouter();
     return (
     <Grid item xs={10} md={2}>
         <Card className="bg-gray-50 hover:scale-125">
-            {removeButton}
+            {props.isRemovable && <RemoveWatchlist id={props.id!} skinId={props.skinId!} setShoudLoad={props.setShouldLoad!}/>}
             <CardActionArea onClick= {() => push("/gun/".concat(props.gunName).concat("_").concat(props.skinName))}>
               <CardMedia>
                 <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)} width={300} height={300}/>
