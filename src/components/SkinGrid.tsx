@@ -29,6 +29,7 @@ export default function SkinGrid(props :{
         key={skin.NAME.concat(skin.GUN_NAME).concat(idGen().toString())} 
         gunName={convertToFrontEndForm(skin.GUN_NAME)} 
         skinName ={convertToFrontEndForm(skin.NAME)} 
+        link={"/gun/".concat(skin.GUN_NAME).concat("_").concat(skin.NAME)}
         gunPic={getPathToPic(skin.GUN_NAME,skin.NAME)}
         shouldLoad={true}
         isRemovable={false}

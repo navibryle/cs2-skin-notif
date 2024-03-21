@@ -36,13 +36,13 @@ function Loading(props: {gunName: string,skinName: string, gunPic:string}){
   )
 }
 
-function Loaded(props: {gunName: string,skinName: string, gunPic:string,isRemovable:boolean,id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>}){
+function Loaded(props: {gunName: string,skinName: string, gunPic:string, link:string, isRemovable:boolean,id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>}){
   const { push } = useRouter();
     return (
     <Grid item xs={10} md={2}>
         <Card className="bg-gray-50 hover:scale-125">
             {props.isRemovable && <RemoveWatchlist id={props.id!} skinId={props.skinId!} setShoudLoad={props.setShouldLoad!}/>}
-            <CardActionArea onClick= {() => push("/gun/".concat(props.gunName).concat("_").concat(props.skinName))}>
+            <CardActionArea onClick= {() => push(props.link)}>
               <CardMedia>
                 <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)} width={300} height={300}/>
               </CardMedia>
@@ -56,12 +56,12 @@ function Loaded(props: {gunName: string,skinName: string, gunPic:string,isRemova
 }
 
 
-export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string,children?:JSX.Element,shouldLoad:boolean,isRemovable:boolean,skinId?:bigint,id?:string}){
+export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string,link:string,children?:JSX.Element,shouldLoad:boolean,isRemovable:boolean,skinId?:bigint,id?:string}){
   const [shouldLoad,setShouldLoad] = useState(props.shouldLoad);
   return (
   <>
     {shouldLoad ? 
-      <Loaded gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic} isRemovable={props.isRemovable} setShouldLoad={setShouldLoad} skinId={props.skinId} id={props.id}/>
+      <Loaded gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic} link={props.link} isRemovable={props.isRemovable} setShouldLoad={setShouldLoad} skinId={props.skinId} id={props.id}/>
     : <Loading gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic}/>}
   </>
   )

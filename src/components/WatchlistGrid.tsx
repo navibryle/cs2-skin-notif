@@ -49,6 +49,7 @@ export default function WatchlistGrid(props:{
             gunName={convertToFrontEndForm(skin.gunName)}
             skinName={convertToFrontEndForm(skin.skinName)}
             gunPic={getPathToPic(skin.gunName,skin.skinName)}
+            link={"/login/watch/".concat(skin.gunName).concat("_").concat(skin.skinName)}
             shouldLoad={shouldLoad}
             isRemovable={true}
             skinId={skin.id}
