@@ -2,9 +2,9 @@
 import { type Prisma, type PrismaClient } from "@prisma/client";
 import { type DefaultArgs } from "@prisma/client/runtime/library";
 import { type Session } from "next-auth";
-import { WatchlistCreateQuerySchema } from "~/utils/types";
+import { z } from 'zod';
+import { WatchlistCreateQuerySchema,WatchListQuerySchema } from "~/utils/types";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import {z} from 'zod';
 
 const errorIntro = "Could not add gun to watchlist ";
 
@@ -78,6 +78,7 @@ export const watchlistRouter = createTRPCRouter(
             data:{
               SKIN_ID: await getSkinId(input.skinName,input.gunName,ctx),
               USER_ID: input.id,
+              PRICE:undefined
             }
           }
         )
@@ -87,6 +88,7 @@ export const watchlistRouter = createTRPCRouter(
       return await ctx.db.wATCHLIST.findMany(
         {
           select:{
+            PRICE:true,
             SKIN:{
               select:{
                 NAME:true,
@@ -121,6 +123,16 @@ export const watchlistRouter = createTRPCRouter(
             NAME:input.skinName,
             GUN_NAME:input.gunName
           }
+        }
+      })
+    }),
+    updateWatchList: publicProcedure.input(WatchListQuerySchema).mutation(async ({ctx,input}) => {
+      return await ctx.db.wATCHLIST.update({
+        where:{
+          SKIN_ID_USER_ID : {SKIN_ID:input.skinId,USER_ID:input.userId}
+        },
+        data:{
+          PRICE:input.price
         }
       })
     })

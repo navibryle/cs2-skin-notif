@@ -1,6 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Backdrop, CardActionArea, CircularProgress, Grid } from "@mui/material";
-import { type Dispatch, type SetStateAction, useState } from 'react';
+import { CardActionArea, Grid } from "@mui/material";
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 import GridEntry from "./GridEntry";
@@ -38,7 +38,7 @@ export default function WatchlistGrid(props:{
 
   for (const i of res.data){
     // TODO: create new grid that fetches a list of guns
-    skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID});
+    skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID,price:i.PRICE});
   }
   return (
   <Grid container spacing={5} className="m-1">
@@ -49,7 +49,7 @@ export default function WatchlistGrid(props:{
             gunName={convertToFrontEndForm(skin.gunName)}
             skinName={convertToFrontEndForm(skin.skinName)}
             gunPic={getPathToPic(skin.gunName,skin.skinName)}
-            link={"/login/watch/".concat(skin.gunName).concat("_").concat(skin.skinName)}
+            link={"/login/watch/".concat(convertToFrontEndForm(skin.gunName)).concat("_").concat(convertToFrontEndForm(skin.skinName))}
             shouldLoad={shouldLoad}
             isRemovable={true}
             skinId={skin.id}

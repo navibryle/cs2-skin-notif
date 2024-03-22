@@ -14,14 +14,14 @@ export const synchronizedBitskinPrices = async () => {
   for (const entry of json.list){
     await db.bITSKINS.upsert(
       {
-        where:{ID:entry.skin_id},
+        where:{ID:entry.skinId},
         update :{
-          AVG_PRICE:entry.price_avg
+          AVG_PRICE:entry.priceAvg
         },
         create: {
-          ID:entry.skin_id,
+          ID:entry.skinId,
           NAME:entry.name,
-          AVG_PRICE: entry.price_avg
+          AVG_PRICE: entry.priceAvg
         }
       }
     )

@@ -62,4 +62,3 @@ export function pushStack(pageStack :Array<StackEntry>,setPageStack :Dispatch<Se
   setPageStack(pageStack);
 }
 
-

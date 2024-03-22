@@ -15,12 +15,26 @@ export type StackEntry = {
 }
 export type BitskinEntry = {
   name: string;
-  price_avg: number,
-  price_max: number,
-  price_min: number,
+  priceAvg: number,
+  priceMax: number,
+  priceMin: number,
   quantity: number,
-  skin_id: number
+  skinId: number
 }
+
+export type WatchList = {
+  skinId: bigint,
+  userId: string,
+  price: bigint
+}
+
+export const WatchListQuerySchema = z.object(
+  {
+    skinId: z.bigint(),
+    userId:z.string(),
+    price: z.bigint()
+  }
+)
 
 
 export const WatchlistCreateQuerySchema = z.object(
