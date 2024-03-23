@@ -1,5 +1,4 @@
 import { usePathname } from "next/navigation";
-
 import { Button, CircularProgress, FormControlLabel, RadioGroup, TextField, Radio } from "@mui/material";
 import { type NextPageContext } from "next";
 import Image from "next/image";
@@ -9,7 +8,6 @@ import { marketTiers } from "~/services/constants";
 import { getNamesFormUrl } from "~/services/steamService";
 import { api } from "~/utils/api";
 import { getPathToPic, idGen } from "~/utils/util";
-
 
 export async function getServerSideProps(context:NextPageContext){
   console.log(context.query);
@@ -111,6 +109,7 @@ function PriceDisplay(props:{price:string,skinId:bigint,userId:string,tier:strin
         props.setPrice("");
     }
   }
+  // TODO: pretify this
   return (
     <div>
       {props.price}<br/>
@@ -119,7 +118,6 @@ function PriceDisplay(props:{price:string,skinId:bigint,userId:string,tier:strin
     </div>
   )
 }
-
 
 export default function Page(props:{price:string,skinId:string,userId:string,tier:string}){
   const [price,setPrice] = useState(props.price);
