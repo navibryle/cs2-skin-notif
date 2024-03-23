@@ -32,7 +32,7 @@ export const WatchListQuerySchema = z.object(
   {
     skinId: z.bigint(),
     userId:z.string(),
-    price: z.bigint()
+    price: z.string().or(z.null())
   }
 )
 

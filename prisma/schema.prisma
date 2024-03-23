@@ -87,7 +87,7 @@ model WATCHLIST {
     SKIN SKINS @relation(fields: [SKIN_ID], references:[ID])
     USER_ID String
     USER User @relation(fields: [USER_ID], references: [id])
-    PRICE BigInt?
+    PRICE String?
 
     @@id([SKIN_ID,USER_ID])
 }
