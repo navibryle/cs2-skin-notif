@@ -1,7 +1,6 @@
 import { type Dispatch, type SetStateAction } from "react";
 import { type StackEntry } from "./types";
 
-
 export function getLastPathOfUrl(url : string):string{
   let idxOfFirstSlash = -1;
   for (let i = url.length - 1; i > -1 && url[i] !== "/";i--){
@@ -61,4 +60,3 @@ export function pushStack(pageStack :Array<StackEntry>,setPageStack :Dispatch<Se
   pageStack.push(entry);
   setPageStack(pageStack);
 }
-

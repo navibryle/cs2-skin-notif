@@ -38,7 +38,8 @@ export function getNamesFormUrl(path :string){
 
 export async function getMarketPrice(gunName:string,skinName:string,marketTier: string){
   marketTier = " ("+marketTier+")";
-   const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name=".concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier),
+   const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name="
+                                  .concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier),
      {next:{revalidate:300}} // revalidate the request every 5 mins
    );
    try{

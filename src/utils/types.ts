@@ -32,7 +32,8 @@ export const WatchListQuerySchema = z.object(
   {
     skinId: z.bigint(),
     userId:z.string(),
-    price: z.string().or(z.null())
+    price: z.string().or(z.null()),
+    tier: z.string()
   }
 )
 
@@ -41,6 +42,7 @@ export const WatchlistCreateQuerySchema = z.object(
   {
     skinName:z.string(),
     gunName:z.string(),
-    id:z.string()
+    id:z.string(),
+    tier:z.string()
   }
 )

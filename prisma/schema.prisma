@@ -88,6 +88,7 @@ model WATCHLIST {
     USER_ID String
     USER User @relation(fields: [USER_ID], references: [id])
     PRICE String?
+    TIER String
 
     @@id([SKIN_ID,USER_ID])
 }

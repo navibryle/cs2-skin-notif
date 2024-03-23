@@ -1,4 +1,4 @@
-import { Button,CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { type NextPageContext } from 'next';
 import { useSession } from 'next-auth/react';
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { getNamesFormUrl, steamPrice } from '~/services/steamService';
 import { api } from '~/utils/api';
 import { type GetSkinPrice, type Prices } from '~/utils/types';
 import { getPathToPic } from '~/utils/util';
+import { marketTiers } from '~/services/constants';
 
 
 export async function getServerSideProps(context:NextPageContext){
@@ -27,7 +28,7 @@ export async function getServerSideProps(context:NextPageContext){
   return tmp;
 }
 
-function AddBtn(props:{gunName:string,skinName:string,id:string}){
+function AddBtn(props:{gunName:string,skinName:string,id:string,tier:string}){
   const addToWatchlist = api.watchlist.addToUsersWatchlist.useMutation();
   return (
       <div className="flex justify-center">
@@ -69,7 +70,7 @@ function AlreadyOnWatchlist(){
   )
 }
 
-function WatchlistOption(props:{gunName:string,skinName:string,id:string}){
+function WatchlistOption(props:{gunName:string,skinName:string,id:string,tier:string}){
   const gunOnUserWatchlist = api.watchlist.userHasGunOnWatchlist.useQuery(props)
   if (gunOnUserWatchlist.isLoading){
     return (
@@ -105,7 +106,7 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
           <div id ="pic" >
             <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700}/>
           </div>
-          {status == "authenticated" && <WatchlistOption skinName={skinName} gunName={gunName} id={session.user.id} />}
+          {status == "authenticated" && <WatchlistOption skinName={skinName} gunName={gunName} id={session.user.id} tier={marketTiers[0]!}/>}
         </div>
         <div className="flex flex-1 flex-col">
           <div>

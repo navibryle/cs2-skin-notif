@@ -38,7 +38,7 @@ export default function WatchlistGrid(props:{
 
   for (const i of res.data){
     // TODO: create new grid that fetches a list of guns
-    skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID,price:i.PRICE});
+    skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID,price:i.PRICE,tier:i.TIER});
   }
   return (
   <Grid container spacing={5} className="m-1">
@@ -49,7 +49,9 @@ export default function WatchlistGrid(props:{
             gunName={convertToFrontEndForm(skin.gunName)}
             skinName={convertToFrontEndForm(skin.skinName)}
             gunPic={getPathToPic(skin.gunName,skin.skinName)}
-            link={"/login/watch/".concat(convertToFrontEndForm(skin.gunName)).concat("_").concat(convertToFrontEndForm(skin.skinName)).concat("?skinId=").concat(skin.id.toString()).concat("&userId=").concat(props.id.toString())}
+            link={"/login/watch/".concat(convertToFrontEndForm(skin.gunName)).concat("_")
+              .concat(convertToFrontEndForm(skin.skinName)).concat("?skinId=").concat(skin.id.toString()).concat("&userId=").concat(props.id.toString())
+              .concat("&tier=").concat(skin.tier)}
             shouldLoad={shouldLoad}
             isRemovable={true}
             skinId={skin.id}

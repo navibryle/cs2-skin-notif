@@ -78,7 +78,8 @@ export const watchlistRouter = createTRPCRouter(
             data:{
               SKIN_ID: await getSkinId(input.skinName,input.gunName,ctx),
               USER_ID: input.id,
-              PRICE:undefined
+              PRICE:undefined,
+              TIER:input.tier
             }
           }
         )
@@ -89,6 +90,7 @@ export const watchlistRouter = createTRPCRouter(
         {
           select:{
             PRICE:true,
+            TIER:true,
             SKIN:{
               select:{
                 NAME:true,

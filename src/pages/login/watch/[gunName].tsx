@@ -1,19 +1,21 @@
 import { usePathname } from "next/navigation";
 
-import { Button, CircularProgress, TextField } from "@mui/material";
+import { Button, CircularProgress, FormControlLabel, RadioGroup, TextField, Radio } from "@mui/material";
 import { type NextPageContext } from "next";
 import Image from "next/image";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { db } from "~/server/db";
+import { marketTiers } from "~/services/constants";
 import { getNamesFormUrl } from "~/services/steamService";
 import { api } from "~/utils/api";
-import { getPathToPic } from "~/utils/util";
+import { getPathToPic, idGen } from "~/utils/util";
 
 
 export async function getServerSideProps(context:NextPageContext){
   console.log(context.query);
   const skinId = context.query.skinId! as string;
   const userId = context.query.userId! as string;
+  const tier = context.query.tier! as string;
   const item = await db.wATCHLIST.findUnique({
     select:{
       PRICE:true
@@ -22,7 +24,7 @@ export async function getServerSideProps(context:NextPageContext){
       SKIN_ID_USER_ID: {SKIN_ID:BigInt(skinId),USER_ID:userId}
     }
   })
-  return {props:{price:item?.PRICE,skinId:skinId,userId:userId}}
+  return {props:{price:item?.PRICE,skinId:skinId,userId:userId,tier:tier}}
 }
 
 function isDigit(a:string){
@@ -34,6 +36,26 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
   const updatePrice = api.watchlist.updateWatchList.useMutation();
   const [isError,setIsError] = useState(false);
   const [tmpPrice,setTmpPrice] = useState("");
+  const [selectedTier,setTier] = useState(marketTiers[0]);
+  const TierForm = () => {
+    return (
+      <RadioGroup 
+        value={selectedTier}
+        onChange={(e) => setTier(e.target.value)}
+      >
+        {
+          marketTiers.map((tier) => (
+            <FormControlLabel 
+              value={tier}
+              control={<Radio/>}
+              key={idGen().toString()}
+              label={tier} 
+            />
+          ))
+        }
+      </RadioGroup>
+    )
+  }
   const Btn = () => {
     if (updatePrice.isError){
       // TODO: display good error
@@ -41,10 +63,20 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
     }else if (updatePrice.isLoading){
       return <CircularProgress/>
     }else if(updatePrice.isIdle){
-      return <Button color="inherit" className="bg-sky-700 mt-4" onClick={() => updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:tmpPrice})}>Update</Button>;
+      return <Button color="inherit" className="bg-sky-700 mt-4" onClick={() => 
+        tmpPrice && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:tmpPrice,tier:selectedTier})
+      }>Update</Button>;
     }else if (updatePrice.isSuccess){
         props.setPrice(tmpPrice);
     }
+  }
+  const InputForm = () => {
+    return (
+    <div>
+      <Btn/>
+      <TierForm/>
+    </div>
+    )
   }
   return (
     <>
@@ -60,12 +92,12 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
         setTmpPrice(inp);
       }}/>
       {isError && <div className="text-xs text-red-500" >Incorrect price format, please enter a decimal number</div>}
-      {!isError && <Btn/>}
+      {!isError && <InputForm/>}
     </>
   )
 }
 
-function PriceDisplay(props:{price:string,skinId:bigint,userId:string,setPrice:Dispatch<SetStateAction<string>>}){
+function PriceDisplay(props:{price:string,skinId:bigint,userId:string,tier:string,setPrice:Dispatch<SetStateAction<string>>}){
   const updatePrice = api.watchlist.updateWatchList.useMutation();
   const Btn = () => {
     if (updatePrice.isError){
@@ -74,21 +106,22 @@ function PriceDisplay(props:{price:string,skinId:bigint,userId:string,setPrice:D
     }else if (updatePrice.isLoading){
       return <CircularProgress/>
     }else if(updatePrice.isIdle){
-      return <Button className="bg-sky-700" onClick={() => updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:null})}>Delete</Button>;
+      return <Button className="bg-sky-700" onClick={() => updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:null,tier:props.tier})}>Delete</Button>;
     }else if (updatePrice.isSuccess){
         props.setPrice("");
     }
   }
   return (
     <div>
-      {props.price}
+      {props.price}<br/>
+      {props.tier}<br/>
       <Btn/>
     </div>
   )
 }
 
 
-export default function Page(props:{price:string,skinId:string,userId:string}){
+export default function Page(props:{price:string,skinId:string,userId:string,tier:string}){
   const [price,setPrice] = useState(props.price);
   const path = usePathname();
   const skinId = BigInt(props.skinId);
@@ -101,7 +134,7 @@ export default function Page(props:{price:string,skinId:string,userId:string}){
           <div className="flex flex-col mt-10 mr-10">
             {
               price ? 
-              <PriceDisplay skinId={skinId} price={price} userId={props.userId} setPrice={setPrice}/>: 
+              <PriceDisplay skinId={skinId} price={price} userId={props.userId} setPrice={setPrice} tier={props.tier}/>: 
               <WatchlistInputForm skinId={skinId} price={price} userId={props.userId} setPrice={setPrice}/>
             }
           </div>
