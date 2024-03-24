@@ -72,7 +72,7 @@ model VerificationToken {
 model BITSKINS {
   ID        BigInt @id
   NAME      String @db.VarChar(255)
-  AVG_PRICE BigInt
+  LOWEST_PRICE BigInt
 }
 
 model SKINS {

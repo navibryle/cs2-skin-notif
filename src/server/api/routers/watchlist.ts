@@ -134,7 +134,8 @@ export const watchlistRouter = createTRPCRouter(
           SKIN_ID_USER_ID : {SKIN_ID:input.skinId,USER_ID:input.userId}
         },
         data:{
-          PRICE:input.price
+          PRICE:input.price,
+          TIER:input.tier
         }
       })
     })

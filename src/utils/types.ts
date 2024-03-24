@@ -15,11 +15,11 @@ export type StackEntry = {
 }
 export type BitskinEntry = {
   name: string;
-  priceAvg: number,
-  priceMax: number,
-  priceMin: number,
+  price_avg: number,
+  price_max: number,
+  price_min: number,
   quantity: number,
-  skinId: number
+  skin_id: number
 }
 
 export type WatchList = {

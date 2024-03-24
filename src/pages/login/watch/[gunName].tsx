@@ -1,7 +1,7 @@
-import { usePathname } from "next/navigation";
-import { Button, CircularProgress, FormControlLabel, RadioGroup, TextField, Radio } from "@mui/material";
+import { Button, CircularProgress, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { type NextPageContext } from "next";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { db } from "~/server/db";
 import { marketTiers } from "~/services/constants";
@@ -22,7 +22,7 @@ export async function getServerSideProps(context:NextPageContext){
       SKIN_ID_USER_ID: {SKIN_ID:BigInt(skinId),USER_ID:userId}
     }
   })
-  return {props:{price:item?.PRICE,skinId:skinId,userId:userId,tier:tier}}
+  return {props:{dbPrice:item?.PRICE,skinId:skinId,userId:userId,dbTier:tier}}
 }
 
 function isDigit(a:string){
@@ -30,11 +30,11 @@ function isDigit(a:string){
   return a in digits;
 }
 
-function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,setPrice:Dispatch<SetStateAction<string>>}){
+function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,setDbData:Dispatch<SetStateAction<DbData>>,setMode:Dispatch<SetStateAction<Mode>>}){
   const updatePrice = api.watchlist.updateWatchList.useMutation();
   const [isError,setIsError] = useState(false);
-  const [tmpPrice,setTmpPrice] = useState("");
-  const [selectedTier,setTier] = useState(marketTiers[0]);
+  const [price,setPrice] = useState(props.dbData?.dbPrice ?? ""); // this represents the price in the form, props.price is the price in the database
+  const [selectedTier,setTier] = useState(props.dbData?.dbTier ?? marketTiers[0]); // this represents the tier in the form, props.tier is the tier in the database
   const TierForm = () => {
     return (
       <RadioGroup 
@@ -54,6 +54,7 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
       </RadioGroup>
     )
   }
+
   const Btn = () => {
     if (updatePrice.isError){
       // TODO: display good error
@@ -62,12 +63,14 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
       return <CircularProgress/>
     }else if(updatePrice.isIdle){
       return <Button color="inherit" className="bg-sky-700 mt-4" onClick={() => 
-        tmpPrice && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:tmpPrice,tier:selectedTier})
-      }>Update</Button>;
+        price && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:price,tier:selectedTier})
+      }>Finish</Button>;
     }else if (updatePrice.isSuccess){
-        props.setPrice(tmpPrice);
+        props.setMode(Mode.View);
+        props.setDbData({dbPrice:price,dbTier:selectedTier!});
     }
   }
+
   const InputForm = () => {
     return (
     <div>
@@ -76,9 +79,10 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
     </div>
     )
   }
+
   return (
     <>
-      <TextField label="Watchlist price" onChange={(e) => {
+      <TextField label="Watchlist price" value={price} onChange={(e) => {
         const inp = e.target.value;
         for (const i of inp){
           if (!isDigit(i) && i !== "."){
@@ -87,7 +91,7 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
           }
         }
         setIsError(false);
-        setTmpPrice(inp);
+        setPrice(inp);
       }}/>
       {isError && <div className="text-xs text-red-500" >Incorrect price format, please enter a decimal number</div>}
       {!isError && <InputForm/>}
@@ -95,34 +99,45 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,price:string,set
   )
 }
 
-function PriceDisplay(props:{price:string,skinId:bigint,userId:string,tier:string,setPrice:Dispatch<SetStateAction<string>>}){
-  const updatePrice = api.watchlist.updateWatchList.useMutation();
-  const Btn = () => {
-    if (updatePrice.isError){
-      // TODO: display good error
-      return <div> Error</div>;
-    }else if (updatePrice.isLoading){
-      return <CircularProgress/>
-    }else if(updatePrice.isIdle){
-      return <Button className="bg-sky-700" onClick={() => updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:null,tier:props.tier})}>Delete</Button>;
-    }else if (updatePrice.isSuccess){
-        props.setPrice("");
-    }
-  }
+function PriceDisplay(props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>>}){
   // TODO: pretify this
   return (
     <div>
-      {props.price}<br/>
-      {props.tier}<br/>
-      <Btn/>
+      {props.dbData.dbPrice}<br/>
+      {props.dbData.dbTier}<br/>
+      <Button className="bg-sky-700" onClick={() => props.setMode(Mode.Edit)}>Update</Button>
     </div>
   )
 }
 
-export default function Page(props:{price:string,skinId:string,userId:string,tier:string}){
-  const [price,setPrice] = useState(props.price);
+enum Mode{
+  View,
+  Create,
+  Edit
+}
+
+type DbData = {
+  dbPrice:string,
+  dbTier:string,
+}
+
+
+export default function Page(props:{dbPrice:string,skinId:string,userId:string,dbTier:string}){
+  const [mode,setMode] = useState(props.dbTier && props.dbPrice ? Mode.View : Mode.Create);
+  const [dbData,setDbData]  = useState({dbPrice: props.dbPrice,dbTier: props.dbTier} as DbData)
   const path = usePathname();
   const skinId = BigInt(props.skinId);
+  const Form = () => {
+   switch(mode){
+    case Mode.View:{
+        return <PriceDisplay dbData={dbData} setMode={setMode}/>
+    }case Mode.Create:{
+        return <WatchlistInputForm skinId={skinId} userId={props.userId} setDbData={setDbData} setMode={setMode}/>
+    } case Mode.Edit:{
+        return <WatchlistInputForm skinId={skinId} userId={props.userId} dbData={dbData} setDbData={setDbData} setMode={setMode}/>
+    }
+   }
+  }
   if (path !== null){
     const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
     return (
@@ -130,11 +145,7 @@ export default function Page(props:{price:string,skinId:string,userId:string,tie
         <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700} className="flex-grow"/>
         <div className="flex-grow">
           <div className="flex flex-col mt-10 mr-10">
-            {
-              price ? 
-              <PriceDisplay skinId={skinId} price={price} userId={props.userId} setPrice={setPrice} tier={props.tier}/>: 
-              <WatchlistInputForm skinId={skinId} price={price} userId={props.userId} setPrice={setPrice}/>
-            }
+          <Form/>
           </div>
         </div>
       </div>

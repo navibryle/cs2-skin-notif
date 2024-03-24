@@ -2,7 +2,6 @@ import { db } from "~/server/db";
 import { type BitskinEntry, type GetSkinPrice, type Prices } from "~/utils/types";
 import { marketTiers } from "./constants";
 
-
 export const synchronizedBitskinPrices = async () => {
   const bitskinsData = await fetch("https://api.bitskins.com/market/insell/730", {
     "headers": {
@@ -14,20 +13,21 @@ export const synchronizedBitskinPrices = async () => {
   for (const entry of json.list){
     await db.bITSKINS.upsert(
       {
-        where:{ID:entry.skinId},
+        where:{ID:entry.skin_id},
         update :{
-          AVG_PRICE:entry.priceAvg
+          LOWEST_PRICE:entry.price_avg
         },
         create: {
-          ID:entry.skinId,
+          ID:entry.skin_id,
           NAME:entry.name,
-          AVG_PRICE: entry.priceAvg
+          LOWEST_PRICE: entry.price_min
         }
       }
     )
   }
 }
 
+// The first three digits in the bitskins number is always the fractional part
 const addDecimalPoint = (num:string) => {
   if (num.length <= 3){
     while(num.length <= 3){
@@ -46,10 +46,10 @@ const getTierfromMap = (priceMap: Map<string,bigint>,tier: string) : string => {
 }
 
 export const bitskinsPrice : GetSkinPrice = async (gunName :string, skinName :string) =>{
-  const prices: Array<{NAME:string,AVG_PRICE:bigint}> = await db.bITSKINS.findMany({
+  const prices: Array<{NAME:string,LOWEST_PRICE:bigint}> = await db.bITSKINS.findMany({
         select:{
           NAME:true,
-          AVG_PRICE:true,
+          LOWEST_PRICE:true,
         },
         where:{
           AND:[
@@ -70,7 +70,7 @@ export const bitskinsPrice : GetSkinPrice = async (gunName :string, skinName :st
   for (const item of prices){
     for (const tier of marketTiers){
       if (item.NAME.toLowerCase().toLowerCase().includes(tier.toLowerCase())){
-        priceMap.set(tier,item.AVG_PRICE);
+        priceMap.set(tier,item.LOWEST_PRICE);
       }
     }
   }

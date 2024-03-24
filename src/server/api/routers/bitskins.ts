@@ -13,7 +13,7 @@ export const bitskinsRouter = createTRPCRouter({
       return ctx.db.bITSKINS.findMany({
         select:{
           NAME:true,
-          AVG_PRICE:true,
+          LOWEST_PRICE:true,
         },
         where:{
           AND:[
