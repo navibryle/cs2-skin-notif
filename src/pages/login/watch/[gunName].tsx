@@ -10,7 +10,6 @@ import { api } from "~/utils/api";
 import { getPathToPic, idGen } from "~/utils/util";
 
 export async function getServerSideProps(context:NextPageContext){
-  console.log(context.query);
   const skinId = context.query.skinId! as string;
   const userId = context.query.userId! as string;
   const tier = context.query.tier! as string;
