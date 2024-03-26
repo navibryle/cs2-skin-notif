@@ -62,7 +62,7 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,s
       return <CircularProgress/>
     }else if(updatePrice.isIdle){
       return <Button color="inherit" className="bg-sky-700 mt-4" onClick={() => 
-        price && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:price,tier:selectedTier})
+        price && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:price,tier:selectedTier,lastNotif:null})
       }>Finish</Button>;
     }else if (updatePrice.isSuccess){
         props.setMode(Mode.View);

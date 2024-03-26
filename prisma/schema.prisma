@@ -89,6 +89,7 @@ model WATCHLIST {
     USER User @relation(fields: [USER_ID], references: [id])
     PRICE String?
     TIER String
+    LAST_NOTIF DateTime?
 
     @@id([SKIN_ID,USER_ID])
 }

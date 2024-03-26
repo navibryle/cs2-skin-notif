@@ -33,7 +33,8 @@ export const WatchListQuerySchema = z.object(
     skinId: z.bigint(),
     userId:z.string(),
     price: z.string().or(z.null()),
-    tier: z.string()
+    tier: z.string(),
+    lastNotif: z.date().or(z.null()).optional()
   }
 )
 
