@@ -79,7 +79,7 @@ export const watchlistRouter = createTRPCRouter(
               SKIN_ID: await getSkinId(input.skinName,input.gunName,ctx),
               USER_ID: input.id,
               PRICE:undefined,
-              TIER:input.tier
+              TIER:input.tier,
             }
           }
         )
@@ -135,7 +135,8 @@ export const watchlistRouter = createTRPCRouter(
         },
         data:{
           PRICE:input.price,
-          TIER:input.tier
+          TIER:input.tier,
+          LAST_NOTIF:input.lastNotif
         }
       })
     })

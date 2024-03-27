@@ -90,6 +90,7 @@ model WATCHLIST {
     PRICE String?
     TIER String
     LAST_NOTIF DateTime?
+    LAST_FETCH DateTime?
 
     @@id([SKIN_ID,USER_ID])
 }
