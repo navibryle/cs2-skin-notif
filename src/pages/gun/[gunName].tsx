@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import { type NextPageContext } from 'next';
 import { useSession } from 'next-auth/react';
 import Image from "next/image";
@@ -34,7 +34,7 @@ function AddBtn(props:{gunName:string,skinName:string,id:string,tier:string}){
       <div className="flex justify-center">
           {
             addToWatchlist.status == "idle" && 
-            <Button onClick = {() => addToWatchlist.mutate({...props})} >
+            <Button color="inherit" onClick = {() => addToWatchlist.mutate({...props})} className="bg-sky-700">
               Add to watchlist
             </Button>
           }
@@ -101,35 +101,38 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
     const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
     return (
     <div className="h-lvh">
-      <div className="flex flex-row h-full">
-        <div className="flex flex-1 flex-col justify-center">
+      <div className="flex flex-col h-full">
+        <div className="flex flex-1 flex-row justify-center">
           <div id ="pic" >
             <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700}/>
           </div>
-          {status == "authenticated" && <WatchlistOption skinName={skinName} gunName={gunName} id={session.user.id} tier={marketTiers[0]!}/>}
         </div>
-        <div className="flex flex-1 flex-col">
-          <div>
-            <h1>Steam Prices</h1>
-          </div>
-          <div>
-            Factory New: {props.steam?.fNew}<br/>
-            Minimal Wear: {props.steam?.minWear}<br/>
-            Field-Tested: {props.steam?.fTesteted}<br/>
-            Well-Worn: {props.steam?.wellWorn}<br/>
-            Battle-Scarred: {props.steam?.bScarred}
-          </div>
-          <br/>
-          <div>
-            <h1>Bitskins prices</h1>
-          </div>
-          <div>
-            Factory New: {props.bitskins?.fNew}<br/>
-            Minimal Wear: {props.bitskins?.minWear}<br/>
-            Field-Tested: {props.bitskins?.fTesteted}<br/>
-            Well-Worn: {props.bitskins?.wellWorn}<br/>
-            Battle-Scarred: {props.bitskins?.bScarred}
-          </div>
+        {status == "authenticated" && <WatchlistOption skinName={skinName} gunName={gunName} id={session.user.id} tier={marketTiers[0]!}/>}
+        <div className="flex sm:flex-row flex-col">
+         <div className="flex-1 flex flex-col">
+            <div className="text-center">
+              <Typography variant="h5">Steam Prices</Typography>
+            </div>
+            <div className="text-center">
+              Factory New: {props.steam?.fNew}<br/>
+              Minimal Wear: {props.steam?.minWear}<br/>
+              Field-Tested: {props.steam?.fTesteted}<br/>
+              Well-Worn: {props.steam?.wellWorn}<br/>
+              Battle-Scarred: {props.steam?.bScarred}
+            </div>
+         </div>
+         <div className="flex-1 flex flex-col justify-center">
+            <div className="text-center">
+              <h1>Bitskins prices</h1>
+            </div>
+            <div className="text-center">
+              Factory New: {props.bitskins?.fNew}<br/>
+              Minimal Wear: {props.bitskins?.minWear}<br/>
+              Field-Tested: {props.bitskins?.fTesteted}<br/>
+              Well-Worn: {props.bitskins?.wellWorn}<br/>
+              Battle-Scarred: {props.bitskins?.bScarred}
+            </div>
+         </div>
         </div>
       </div>
     </div>
