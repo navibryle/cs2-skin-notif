@@ -49,6 +49,7 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,s
       <RadioGroup 
         value={selectedTier}
         onChange={(e) => setTier(e.target.value)}
+        className="m-10"
       >
         {
           marketTiers.map((tier) => (
@@ -91,17 +92,19 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,s
 
   return (
     <>
-      <TextField label="Watchlist price" value={price} onChange={(e) => {
-        const inp = e.target.value;
-        for (const i of inp){
-          if (!isDigit(i) && i !== "."){
-            setIsError(true);
-            return;
+      <div>
+        <TextField label="Watchlist price" className="w-3/4 sm:w-full" value={price} onChange={(e) => {
+          const inp = e.target.value;
+          for (const i of inp){
+            if (!isDigit(i) && i !== "."){
+              setIsError(true);
+              return;
+            }
           }
-        }
-        setIsError(false);
-        setPrice(inp);
-      }}/>
+          setIsError(false);
+          setPrice(inp);
+        }}/>
+      </div>
       {isError && <div className="text-xs text-red-500" >Incorrect price format, please enter a decimal number</div>}
       {!isError && <InputForm/>}
     </>
