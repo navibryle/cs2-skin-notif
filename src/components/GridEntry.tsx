@@ -8,15 +8,27 @@ import { api } from "~/utils/api";
 const RemoveWatchlist = (props:{
   id:string,
   skinId:bigint,
-  setShoudLoad:Dispatch<SetStateAction<boolean>>
+  setShoudLoad:Dispatch<SetStateAction<boolean>>,
+  setIsDeleted:Dispatch<SetStateAction<boolean>>
 }) => {
   const removeWatchlist = api.watchlist.removeWatchlist.useMutation();
-  props.setShoudLoad(!removeWatchlist.isLoading);
-  return (<CardActionArea onClick = { () => removeWatchlist.mutate({skinId:props.skinId,userId:props.id})}>
+  const removeCallback = () => {
+    props.setShoudLoad(!removeWatchlist.isLoading);
+    removeWatchlist.mutate({skinId:props.skinId,userId:props.id})
+  }
+  if (removeWatchlist.isSuccess){
+    props.setIsDeleted(true);
+  }else if (removeWatchlist.isError){
     <div className="flex justify-center bg-red-800">
-      <DeleteIcon/>
+      Error removing card
     </div>
-  </CardActionArea>);
+  }else if (removeWatchlist.isIdle){
+    return (<CardActionArea onClick = {removeCallback}>
+      <div className="flex justify-center bg-red-800">
+        <DeleteIcon/>
+      </div>
+    </CardActionArea>);
+  }
 }
 
 function Loading(props: {gunName: string,skinName: string, gunPic:string}){
@@ -36,13 +48,18 @@ function Loading(props: {gunName: string,skinName: string, gunPic:string}){
   )
 }
 
-function Loaded(props: {gunName: string,skinName: string, gunPic:string, link:string, isRemovable:boolean,id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>}){
+function Loaded(props: {gunName: string,skinName: string, gunPic:string, link:string, isRemovable:boolean,id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>,setShouldDisable:Dispatch<SetStateAction<boolean>>,setIsDeleted:Dispatch<SetStateAction<boolean>>}){
   const { push } = useRouter();
+  const pageSwitch = async () =>{
+    props.setShouldDisable(true);
+    await push(props.link);
+
+  }
     return (
     <Grid item xs={10} md={2}>
         <Card className="bg-gray-50 hover:scale-125">
-            {props.isRemovable && <RemoveWatchlist id={props.id!} skinId={props.skinId!} setShoudLoad={props.setShouldLoad!}/>}
-            <CardActionArea onClick= {() => push(props.link)}>
+            {props.isRemovable && <RemoveWatchlist id={props.id!} skinId={props.skinId!} setShoudLoad={props.setShouldLoad!} setIsDeleted={props.setIsDeleted}/>}
+            <CardActionArea onClick= {pageSwitch}>
               <CardMedia>
                 <Image src={props.gunPic} alt={props.gunName.concat(" ").concat(props.skinName)} width={300} height={300}/>
               </CardMedia>
@@ -56,13 +73,18 @@ function Loaded(props: {gunName: string,skinName: string, gunPic:string, link:st
 }
 
 
-export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string,link:string,children?:JSX.Element,shouldLoad:boolean,isRemovable:boolean,skinId?:bigint,id?:string}){
+export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string,link:string,shouldLoad:boolean,isRemovable:boolean,skinId?:bigint,id?:string,setShouldDisable:Dispatch<SetStateAction<boolean>>}){
   const [shouldLoad,setShouldLoad] = useState(props.shouldLoad);
+  const [isDeleted,setIsDeleted] = useState(false)
+  let content = shouldLoad ? 
+      <Loaded gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic} link={props.link} isRemovable={props.isRemovable} setShouldLoad={setShouldLoad} skinId={props.skinId} id={props.id} setShouldDisable={props.setShouldDisable} setIsDeleted={setIsDeleted}/>
+    : <Loading gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic}/>
+  if (isDeleted){
+    content = <span></span>
+  }
   return (
   <>
-    {shouldLoad ? 
-      <Loaded gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic} link={props.link} isRemovable={props.isRemovable} setShouldLoad={setShouldLoad} skinId={props.skinId} id={props.id}/>
-    : <Loading gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic}/>}
+    {content}
   </>
   )
 }

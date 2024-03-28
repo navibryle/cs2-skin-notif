@@ -1,30 +1,16 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import { CardActionArea, Grid } from "@mui/material";
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { Grid } from "@mui/material";
+import { useState } from 'react';
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 import GridEntry from "./GridEntry";
 
-const RemoveWatchlist = (props:{
-  id:string,
-  skinId:bigint,
-  setShoudLoad:Dispatch<SetStateAction<boolean>>
-}) => {
-  const removeWatchlist = api.watchlist.removeWatchlist.useMutation();
-  props.setShoudLoad(!removeWatchlist.isLoading);
-  return (<CardActionArea onClick = { () => removeWatchlist.mutate({skinId:props.skinId,userId:props.id})}>
-    <div className="flex justify-center bg-red-800">
-      <DeleteIcon/>
-    </div>
-  </CardActionArea>);
-}
 
 
 export default function WatchlistGrid(props:{
   id:string
 }){
   const res = api.watchlist.getUserWatchlist.useQuery(props.id);
-  const [shouldLoad,setShouldLoad] = useState(true);
+  const [shouldDisable,setShouldDisable] = useState(false);
 
   if (res.status == "loading"){
     // TODO: add cool loading screen
@@ -52,13 +38,12 @@ export default function WatchlistGrid(props:{
             link={"/login/watch/".concat(convertToFrontEndForm(skin.gunName)).concat("_")
               .concat(convertToFrontEndForm(skin.skinName)).concat("?skinId=").concat(skin.id.toString()).concat("&userId=").concat(props.id.toString())
               .concat("&tier=").concat(skin.tier)}
-            shouldLoad={shouldLoad}
+            shouldLoad={!shouldDisable}
+            setShouldDisable={setShouldDisable}
             isRemovable={true}
             skinId={skin.id}
             id={props.id}
-            >
-            <RemoveWatchlist id={props.id} skinId={skin.id} setShoudLoad={setShouldLoad}/>
-          </GridEntry>
+            />
         )
       )
     }

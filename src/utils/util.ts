@@ -35,11 +35,11 @@ export function getPath(url : string) : string{
 }
 
 export function convertToDbForm(frontEndString:string){
-  return frontEndString.replace(" ","_");
+  return frontEndString.replaceAll(" ","_");
 }
 
 export function convertToFrontEndForm(dbString:string){
-  return dbString.replace("_"," ");
+  return dbString.replaceAll("_"," ");
 }
 
 export function idGen(){

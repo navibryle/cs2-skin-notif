@@ -1,5 +1,6 @@
 import { Button, CircularProgress, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { type NextPageContext } from "next";
+import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
@@ -10,6 +11,15 @@ import { api } from "~/utils/api";
 import { getPathToPic, idGen } from "~/utils/util";
 
 export async function getServerSideProps(context:NextPageContext){
+  const session = await getSession(context)
+  if (!session){
+    return {
+      redirect:{
+        destination:"/",
+        pemanent:false
+      }
+    }
+  }
   const skinId = context.query.skinId! as string;
   const userId = context.query.userId! as string;
   const tier = context.query.tier! as string;
