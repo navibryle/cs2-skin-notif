@@ -27,7 +27,7 @@ export default function WatchlistGrid(props:{
     skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID,price:i.PRICE,tier:i.TIER});
   }
   return (
-  <Grid container spacing={5} className="m-1">
+  <Grid container spacing={5} className="m-1 p-3">
     {skinList.map(
       (skin) =>(
           <GridEntry

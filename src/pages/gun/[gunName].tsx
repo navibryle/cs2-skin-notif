@@ -123,7 +123,7 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
          </div>
          <div className="flex-1 flex flex-col justify-center">
             <div className="text-center">
-              <h1>Bitskins prices</h1>
+              <Typography variant="h5">Bitskins prices</Typography>
             </div>
             <div className="text-center">
               Factory New: {props.bitskins?.fNew}<br/>

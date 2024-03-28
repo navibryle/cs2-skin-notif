@@ -1,4 +1,4 @@
-import { Button, CircularProgress, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { Button, CircularProgress, FormControlLabel, Radio, RadioGroup, TextField,Typography } from "@mui/material";
 import { type NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { db } from "~/server/db";
 import { marketTiers } from "~/services/constants";
 import { getNamesFormUrl } from "~/services/steamService";
 import { api } from "~/utils/api";
-import { getPathToPic, idGen } from "~/utils/util";
+import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 
 export async function getServerSideProps(context:NextPageContext){
   const session = await getSession(context)
@@ -112,8 +112,8 @@ function PriceDisplay(props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>
   // TODO: pretify this
   return (
     <div>
-      {props.dbData.dbPrice}<br/>
-      {props.dbData.dbTier}<br/>
+      Watchlist Price: {props.dbData.dbPrice}<br/>
+      Tier: {props.dbData.dbTier}<br/>
       <Button className="bg-sky-700" onClick={() => props.setMode(Mode.Edit)}>Update</Button>
     </div>
   )
@@ -150,8 +150,13 @@ export default function Page(props:{dbPrice:string,skinId:string,userId:string,d
   if (path !== null){
     const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
     return (
-      <div className="flex">
-        <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700} className="flex-grow"/>
+      <div className="flex text-center flex-col sm:flex-row">
+        <div className="flex flex-col">
+          <div className="flex justify-center">
+            <Typography variant="h5">{convertToFrontEndForm(gunName) + " "+convertToFrontEndForm(skinName)}</Typography>
+          </div>
+          <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700} className="flex-grow"/>
+        </div>
         <div className="flex-grow">
           <div className="flex flex-col mt-10 mr-10">
           <Form/>
