@@ -1,4 +1,4 @@
-import { Button, CircularProgress, FormControlLabel, Radio, RadioGroup, TextField,Typography } from "@mui/material";
+import { Button, FormControlLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { type NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
@@ -18,7 +18,7 @@ export async function getServerSideProps(context:NextPageContext){
     return {
       redirect:{
         destination:"/",
-        pemanent:false
+        permanent:false
       }
     }
   }

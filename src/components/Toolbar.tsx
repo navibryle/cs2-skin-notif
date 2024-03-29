@@ -2,9 +2,10 @@ import { AppBar, Button, IconButton, Toolbar } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
+import { CenteredLoading } from "./Loading";
 
-const SignOutBtn = ({isSignedIn} : {isSignedIn: boolean}) => {
-    if (!isSignedIn){
+const SignOutBtn = (props : {isSignedIn: boolean}) => {
+    if (!props.isSignedIn){
         return null;
     }
     return (
@@ -14,12 +15,12 @@ const SignOutBtn = ({isSignedIn} : {isSignedIn: boolean}) => {
     )
 }
 
-const Navbar = () => {
+export default function Navbar (){
     const { data: session, status} = useSession();
     const {push} = useRouter();
     let content = null;
     if (status == "loading"){
-        content = <div>loading</div>;
+        content = <CenteredLoading/>;
     }else if (status == "unauthenticated"){
         content = <Button color="inherit" onClick={() => signIn()} >Login</Button>;
     }else{
@@ -39,5 +40,3 @@ const Navbar = () => {
         </AppBar>
     )
 }
-
-export default Navbar;

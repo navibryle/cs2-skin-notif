@@ -1,74 +1,71 @@
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { Autocomplete, IconButton, TextField, Tooltip, type AutocompleteInputChangeReason } from "@mui/material";
-import { useState, type SyntheticEvent, type Dispatch, type SetStateAction } from "react";
+import { Autocomplete, IconButton, TextField, Tooltip } from "@mui/material";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { api } from "~/utils/api";
+import { CenteredError } from './Error';
+import { CenteredLoading } from './Loading';
+
+const afterSearchHeight = "10vh";
+const beforeSearchHeight = "50vh";
 
 function updateSearchBar(queryRes :boolean,height:string,setSearchBarTopMargin:Dispatch<SetStateAction<string>>){
-  if (queryRes && height !== "10vh"){
-    setSearchBarTopMargin("10vh");
-  }else if (!queryRes && height !== "50vh"){
-    setSearchBarTopMargin("50vh");
+  if (queryRes && height !== afterSearchHeight){
+    setSearchBarTopMargin(afterSearchHeight);
+  }else if (!queryRes && height !== beforeSearchHeight){
+    setSearchBarTopMargin(beforeSearchHeight);
   }
 }
 
 export default function SearchBar(props:{
-  hasQueryResState:{hasQueryRes:boolean,setHasQueryRes:Dispatch<SetStateAction<boolean>>}
-  setInput:Dispatch<SetStateAction<string>>
+    hasQueryResState:{hasQueryRes:boolean,setHasQueryRes:Dispatch<SetStateAction<boolean>>}
+    setInput:Dispatch<SetStateAction<string>>
   }){
-
   const gunData = api.steam.getAllGunNames.useQuery();
-  const [searchBarTopMargin,setSearchBarTopMargin] = useState("50vh");
+  const [searchBarTopMargin,setSearchBarTopMargin] = useState(beforeSearchHeight);
 
-  const onSearchInput = (event: SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => {
-    // reason and event are unused, they are only here to adhere to a type contract
-    props.setInput(value);
-  }
-  if (gunData.status === "loading"){
-    return (<div>Loading</div>)
-  }else if (gunData.status === "success"){
+  if (gunData.isLoading){
+    return <CenteredLoading/>
+  }else if (gunData.isSuccess || gunData.isFetched){
     const gunNames : Array<{GUN_NAME:string}> | undefined = gunData.data;
     const gunList:Array<{label:string,key:string}>= [];
     if (gunNames === undefined){
-      throw Error("wtf");
+      return <CenteredError/>
     }
     for (const gun of gunNames){
       gunList.push({label:gun.GUN_NAME.replace("_"," "),key:(Math.random()*Math.pow(2,31)).toString()});
     }
-
     updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
-
     const searchBtnClick = () => {
       updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
-  }
-
-  return (
-    <div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:"10vh"}}>
-    <div className="text-center">
-      <span className="flex justify-center">
-      <Autocomplete 
-      disablePortal
-      options={gunList}
-      onInputChange={onSearchInput}
-      sx={{width:300}}
-      renderInput={(params) => <TextField {...params}/>}
-      />
-      <Tooltip title="Search">
-        <IconButton aria-label = "search" className="align-middle" onClick={searchBtnClick}>
-        <ZoomInIcon/>
-        </IconButton>
-      </Tooltip>
-      </span>
-    </div>
-    </div>);
+    }  
+    return (
+      <div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:afterSearchHeight}}>
+        <div className="text-center">
+          <span className="flex justify-center">
+          <Autocomplete 
+          disablePortal
+          options={gunList}
+          onInputChange={(event, value) => props.setInput(value)/**event is not used here but not having it here throws an error**/}
+          sx={{width:300}}
+          renderInput={(params) => <TextField {...params}/>}
+          />
+          <Tooltip title="Search">
+            <IconButton aria-label = "search" className="align-middle" onClick={searchBtnClick}>
+            <ZoomInIcon/>
+            </IconButton>
+          </Tooltip>
+          </span>
+        </div>
+      </div>);
   }else{
   return (
     <div>
-    <div>
-      Error
-    </div>
-    <div>
-      {gunData.error.message}
-    </div>
+      <div>
+        Error
+      </div>
+      <div>
+        {gunData.error.message}
+      </div>
     </div>)
   }
 }

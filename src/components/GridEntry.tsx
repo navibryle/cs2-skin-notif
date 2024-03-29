@@ -4,35 +4,37 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { api } from "~/utils/api";
+import CenteredError from './Error';
 
 const RemoveWatchlist = (props:{
-  id:string,
-  skinId:bigint,
-  setShoudLoad:Dispatch<SetStateAction<boolean>>,
-  setIsDeleted:Dispatch<SetStateAction<boolean>>
-}) => {
+    id:string,
+    skinId:bigint,
+    setShoudLoad:Dispatch<SetStateAction<boolean>>,
+    setIsDeleted:Dispatch<SetStateAction<boolean>>
+  }) => {
   const removeWatchlist = api.watchlist.removeWatchlist.useMutation();
   const removeCallback = () => {
-    props.setShoudLoad(!removeWatchlist.isLoading);
     removeWatchlist.mutate({skinId:props.skinId,userId:props.id})
   }
   if (removeWatchlist.isSuccess){
     props.setIsDeleted(true);
   }else if (removeWatchlist.isError){
-    <div className="flex justify-center bg-red-800">
-      Error removing card
-    </div>
+    return <CenteredError/>
   }else if (removeWatchlist.isIdle){
     return (<CardActionArea onClick = {removeCallback}>
       <div className="flex justify-center bg-red-800">
         <DeleteIcon/>
       </div>
     </CardActionArea>);
+  }else if (removeWatchlist.isLoading){
+    props.setShoudLoad(true)
   }
 }
 
-function Loading(props: {gunName: string,skinName: string, gunPic:string}){
-    return (
+const Loading = (props:{
+    gunName: string,skinName: string, gunPic:string
+  }) => {
+  return (
     <Grid item xs={10} md={2}>
         <Card className="opacity-60 bg-gray-50 hover:scale-125">
             <CardActionArea>
@@ -48,7 +50,11 @@ function Loading(props: {gunName: string,skinName: string, gunPic:string}){
   )
 }
 
-function Loaded(props: {gunName: string,skinName: string, gunPic:string, link:string, isRemovable:boolean,id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>,setShouldDisable:Dispatch<SetStateAction<boolean>>,setIsDeleted:Dispatch<SetStateAction<boolean>>}){
+const Loaded = (props:{
+    gunName: string,skinName: string, gunPic:string, link:string, isRemovable:boolean,
+    id?:string,skinId?:bigint,setShouldLoad?:Dispatch<SetStateAction<boolean>>,
+    setShouldDisable:Dispatch<SetStateAction<boolean>>,setIsDeleted:Dispatch<SetStateAction<boolean>>
+  }) => {
   const { push } = useRouter();
   const pageSwitch = async () =>{
     props.setShouldDisable(true);
@@ -73,12 +79,20 @@ function Loaded(props: {gunName: string,skinName: string, gunPic:string, link:st
 }
 
 
-export default function GridEntry(props: {gunName: string,skinName: string, gunPic:string,link:string,shouldLoad:boolean,isRemovable:boolean,skinId?:bigint,id?:string,setShouldDisable:Dispatch<SetStateAction<boolean>>}){
+export default function GridEntry(props:{
+    gunName: string,skinName: string, gunPic:string,
+    link:string,shouldLoad:boolean,isRemovable:boolean,
+    skinId?:bigint,id?:string,setShouldDisable:Dispatch<SetStateAction<boolean>>}
+  ){
+  // replace the content with an empty span if it has been deleted in the database
   const [shouldLoad,setShouldLoad] = useState(props.shouldLoad);
   const [isDeleted,setIsDeleted] = useState(false)
   let content = shouldLoad ? 
-      <Loaded gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic} link={props.link} isRemovable={props.isRemovable} setShouldLoad={setShouldLoad} skinId={props.skinId} id={props.id} setShouldDisable={props.setShouldDisable} setIsDeleted={setIsDeleted}/>
-    : <Loading gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic}/>
+      <Loaded gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic} 
+        link={props.link} isRemovable={props.isRemovable} setShouldLoad={setShouldLoad} 
+        skinId={props.skinId} id={props.id} setShouldDisable={props.setShouldDisable} setIsDeleted={setIsDeleted}
+      />
+      :<Loading gunName={props.gunName} skinName={props.skinName} gunPic={props.gunPic}/>
   if (isDeleted){
     content = <span></span>
   }
