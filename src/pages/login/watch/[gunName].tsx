@@ -8,7 +8,7 @@ import { CenteredError } from "~/components/Error";
 import { CenteredLoading } from "~/components/Loading";
 import { db } from "~/server/db";
 import { marketTiers } from "~/services/constants";
-import { getNamesFormUrl } from "~/services/steamService";
+import { getNamesFromUrl } from '~/utils/util';
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 
@@ -150,8 +150,9 @@ export default function Page(props:{dbPrice:string,skinId:string,userId:string,d
     }
    }
   }
+
   if (path !== null){
-    const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    const [gunName,skinName] = getNamesFromUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
     return (
       <div className="flex text-center flex-col sm:flex-row">
         <div className="flex flex-col">

@@ -60,3 +60,19 @@ export function pushStack(pageStack :Array<StackEntry>,setPageStack :Dispatch<Se
   pageStack.push(entry);
   setPageStack(pageStack);
 }
+
+export const getNamesFromUrl = (path :string) => {
+  if (!path){
+    throw Error("Url is an empty string.")
+  }
+  let [gunName,skinName] = getLastPathOfUrl(path).split("_");
+  if (!gunName || !skinName){
+    throw Error("Url has no gun");
+  }
+  gunName = convertToDbForm(decodeURI(gunName));
+  skinName = convertToDbForm(decodeURI(skinName));
+  if (skinName.includes(".json")){
+    skinName = skinName.replace(".json","");
+  }
+  return [gunName,skinName]
+}

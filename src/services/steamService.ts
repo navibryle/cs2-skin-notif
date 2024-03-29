@@ -1,6 +1,6 @@
 import assert from "assert";
 import { type GetSkinPrice, type Prices } from "~/utils/types";
-import { convertToDbForm, convertToFrontEndForm, getLastPathOfUrl } from "~/utils/util";
+import { convertToFrontEndForm } from "~/utils/util";
 import { marketTiers } from "./constants";
 
 export const steamPrice : GetSkinPrice = async (gunName :string, skinName :string) => {
@@ -16,30 +16,15 @@ export const steamPrice : GetSkinPrice = async (gunName :string, skinName :strin
     wellWorn: await pricesRes[3]!,
     bScarred: await pricesRes[4]!
   };
-  const tmp =  validatePrices(prices);
-  return tmp;
+  const validatedPrices =  validatePrices(prices);
+  return validatedPrices;
 }
 
-export function getNamesFormUrl(path :string){
-  if (path === null || path === undefined){
-  throw Error("wtf");
-  }
-  let [gunName,skinName] = getLastPathOfUrl(path).split("_");
-  if (gunName === undefined || skinName === undefined){
-    throw Error("wtf");
-  }
-  gunName = convertToDbForm(decodeURI(gunName));
-  skinName = convertToDbForm(decodeURI(skinName));
-  if (skinName.includes(".json")){
-    skinName = skinName.replace(".json","");
-  }
-  return [gunName,skinName]
-}
 
-export async function getMarketPrice(gunName:string,skinName:string,marketTier: string){
+const getMarketPrice = async(gunName:string,skinName:string,marketTier: string) => {
   marketTier = " ("+marketTier+")";
-   const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name="
-                                  .concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier),
+  const steamData =  await fetch("https://steamcommunity.com/market/priceoverview/?country=CA&currency=1&appid=730&market_hash_name="
+                    .concat(convertToFrontEndForm(gunName)).concat(" | ").concat(convertToFrontEndForm(skinName)).concat(marketTier),
      {next:{revalidate:300}} // revalidate the request every 5 mins
    );
    try{
@@ -50,14 +35,14 @@ export async function getMarketPrice(gunName:string,skinName:string,marketTier: 
    }
 }
 
-function validatePrice(price :string | null){
+const validatePrice = (price :string | null) => {
   if (price === undefined || price === null){
     return "No listings";
   }
   return price;
 }
 
-export function validatePrices(prices :Prices) : Prices {
+const validatePrices = (prices :Prices) : Prices => {
   return {
     fNew : validatePrice(prices.fNew),
     fTesteted : validatePrice(prices.fTesteted),

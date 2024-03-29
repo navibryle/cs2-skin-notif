@@ -12,7 +12,6 @@ export default function Home() {
     <Head>
       <title>Cs market notifier</title>
       <meta name="description" content="Notifies users with their selected counter strike market trend" />
-      <link rel="icon" href="/favicon.ico" />
     </Head>
     <SearchBar  setInput={setInput} hasQueryResState={{hasQueryRes,setHasQueryRes}}/>
     <SkinGrid gunName={query} setHasQueryRes={setHasQueryRes} hasQueryResState={{hasQueryRes,setHasQueryRes}}/>

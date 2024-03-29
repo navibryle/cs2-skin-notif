@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
 import { bitskinsPrice } from '~/services/bitskinsService';
-import { getNamesFormUrl, steamPrice } from '~/services/steamService';
+import { steamPrice } from '~/services/steamService';
 import { api } from '~/utils/api';
 import { type GetSkinPrice, type Prices } from '~/utils/types';
 import { convertToFrontEndForm, getPathToPic } from '~/utils/util';
@@ -12,13 +12,14 @@ import { marketTiers } from '~/services/constants';
 import SentimentVeryDissatisfied from '@mui/icons-material/SentimentVeryDissatisfied';
 import { CenteredLoading } from '~/components/Loading';
 import CenteredError from '~/components/Error';
+import { getNamesFromUrl } from '~/utils/util';
 
 
 export async function getServerSideProps(context:NextPageContext){
   if (context.req?.url === undefined){
     throw Error("Url is missing");
   }
-  const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+  const [gunName,skinName] = getNamesFromUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
   await bitskinsPrice(gunName,skinName);
   const marketList: Array<GetSkinPrice> = [steamPrice,bitskinsPrice];
 
@@ -92,7 +93,7 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
   const path = usePathname();
   const {data:session,status} = useSession();
   if (path !== null){
-    const [gunName,skinName] = getNamesFormUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
+    const [gunName,skinName] = getNamesFromUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
     return (
     <div className="h-lvh">
       <div className="flex flex-col h-full">

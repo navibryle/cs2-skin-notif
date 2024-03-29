@@ -37,7 +37,6 @@ const addDecimalPoint = (num:string) => {
   return num.slice(0,-3)+"."+num.slice(-3);
 }
 
-
 const getTierfromMap = (priceMap: Map<string,bigint>,tier: string) : string => {
   if (priceMap.has(tier)){
     return "$"+addDecimalPoint(priceMap.get(tier)?.toString() ?? "Unknown")+" USD";
