@@ -44,7 +44,8 @@ export async function getServerSideProps(context:NextPageContext){
       SKIN_ID_USER_ID: {SKIN_ID:BigInt(skinId),USER_ID:userId}
     }
   })
-  return {props:{dbPrice:item?.PRICE,skinId:skinId,userId:userId,dbTier:tier}}
+  const price = item === undefined ? null : item; // 'undenfined' is not serializable which causes this page to crash. Ensure that it is always serializable
+  return {props:{dbPrice:price,skinId:skinId,userId:userId,dbTier:tier}}
 }
 
 const isDigit = (a:string) => {
