@@ -2,13 +2,13 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import { Autocomplete, IconButton, TextField, Tooltip } from "@mui/material";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { api } from "~/utils/api";
-import { CenteredError } from './Error';
+import CenteredError from './Error';
 import { CenteredLoading } from './Loading';
 
 const afterSearchHeight = "10vh";
 const beforeSearchHeight = "50vh";
 
-function updateSearchBar(queryRes :boolean,height:string,setSearchBarTopMargin:Dispatch<SetStateAction<string>>){
+const updateSearchBar = (queryRes :boolean,height:string,setSearchBarTopMargin:Dispatch<SetStateAction<string>>) => {
   if (queryRes && height !== afterSearchHeight){
     setSearchBarTopMargin(afterSearchHeight);
   }else if (!queryRes && height !== beforeSearchHeight){

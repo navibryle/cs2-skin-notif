@@ -12,6 +12,17 @@ import { getNamesFormUrl } from "~/services/steamService";
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 
+enum Mode{
+  View,
+  Create,
+  Edit
+}
+
+type DbData = {
+  dbPrice:string,
+  dbTier:string,
+}
+
 export async function getServerSideProps(context:NextPageContext){
   const session = await getSession(context)
   if (!session){
@@ -36,12 +47,12 @@ export async function getServerSideProps(context:NextPageContext){
   return {props:{dbPrice:item?.PRICE,skinId:skinId,userId:userId,dbTier:tier}}
 }
 
-function isDigit(a:string){
+const isDigit = (a:string) => {
   const digits = ["1","2","3","4","5","6","7","8","9","0"]
   return a in digits;
 }
 
-function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,setDbData:Dispatch<SetStateAction<DbData>>,setMode:Dispatch<SetStateAction<Mode>>}){
+const WatchlistInputForm = (props: {skinId:bigint,userId:string,dbData?:DbData,setDbData:Dispatch<SetStateAction<DbData>>,setMode:Dispatch<SetStateAction<Mode>>}) => {
   const updatePrice = api.watchlist.updateWatchList.useMutation();
   const [isError,setIsError] = useState(false);
   const [price,setPrice] = useState(props.dbData?.dbPrice ?? ""); // this represents the price in the form, props.price is the price in the database
@@ -112,7 +123,7 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,s
   )
 }
 
-function PriceDisplay(props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>>}){
+const PriceDisplay = (props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>>}) => {
   return (
     <div>
       Watchlist Price: {props.dbData.dbPrice}<br/>
@@ -121,18 +132,6 @@ function PriceDisplay(props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>
     </div>
   )
 }
-
-enum Mode{
-  View,
-  Create,
-  Edit
-}
-
-type DbData = {
-  dbPrice:string,
-  dbTier:string,
-}
-
 
 export default function Page(props:{dbPrice:string,skinId:string,userId:string,dbTier:string}){
   const [mode,setMode] = useState(props.dbTier && props.dbPrice ? Mode.View : Mode.Create);

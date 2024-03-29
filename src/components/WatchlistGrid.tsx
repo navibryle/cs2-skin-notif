@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { useState } from 'react';
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
-import { CenteredError } from "./Error";
+import CenteredError from "./Error";
 import GridEntry from "./GridEntry";
 import { CenteredLoading } from "./Loading";
 

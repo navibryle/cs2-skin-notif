@@ -4,22 +4,21 @@ import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
 import GridEntry from "./GridEntry";
 import { useState } from "react";
+import { CenteredLoading } from "./Loading";
+import CenteredError from "./Error";
 
 export default function SkinGrid(props :{
     hasQueryResState:{hasQueryRes:boolean,setHasQueryRes:Dispatch<SetStateAction<boolean>>}
     setHasQueryRes:Dispatch<SetStateAction<boolean>>,
     gunName:string
   }){
-
   const [shouldDisable,setShouldDisable] = useState(false);
   const skins = api.steam.getSkins.useQuery(props.gunName.replace(" ","_"));
 
   if (skins.isLoading){
-    return <div>Loading</div>
+    return <CenteredLoading/>
   }else if (skins.isError){
-    return <div>
-      Error: {skins.error.message}
-    </div>
+    return <CenteredError/>
   } 
 
   const skinList = skins.data;

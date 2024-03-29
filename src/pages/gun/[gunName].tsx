@@ -11,58 +11,57 @@ import { convertToFrontEndForm, getPathToPic } from '~/utils/util';
 import { marketTiers } from '~/services/constants';
 import SentimentVeryDissatisfied from '@mui/icons-material/SentimentVeryDissatisfied';
 import { CenteredLoading } from '~/components/Loading';
-import { CenteredError } from '~/components/Error';
+import CenteredError from '~/components/Error';
 
 
 export async function getServerSideProps(context:NextPageContext){
   if (context.req?.url === undefined){
-    throw Error("wtf");
+    throw Error("Url is missing");
   }
   const [gunName,skinName] = getNamesFormUrl(context.req?.url) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
   await bitskinsPrice(gunName,skinName);
   const marketList: Array<GetSkinPrice> = [steamPrice,bitskinsPrice];
 
-  const tmp = { 
+  const props = { 
     props:{
       steam:await marketList[0]!(gunName,skinName),
       bitskins:await marketList[1]!(gunName,skinName)
       }
     };
-  return tmp;
+  return props;
 }
 
-function AddBtn(props:{gunName:string,skinName:string,id:string,tier:string}){
+const AddBtn = (props:{gunName:string,skinName:string,id:string,tier:string}) => {
   const addToWatchlist = api.watchlist.addToUsersWatchlist.useMutation();
+  const Content = () => {
+    if (addToWatchlist.isIdle){
+      return (
+        <Button color="inherit" onClick = {() => addToWatchlist.mutate({...props})} className="bg-sky-700">
+          Add to watchlist
+        </Button>
+      )
+    }else if (addToWatchlist.isLoading){
+      return <CircularProgress/>
+    }else if (addToWatchlist.isSuccess){
+      return (
+        <Typography color="green">
+          Successfully added to your watchlist!
+        </Typography>
+      )
+    }else if (addToWatchlist.isError){
+        <Typography>
+          <SentimentVeryDissatisfied color="error"/> Could not add to watchlist
+        </Typography>
+    }
+  }
   return (
       <div className="flex justify-center">
-          {
-            addToWatchlist.status == "idle" && 
-            <Button color="inherit" onClick = {() => addToWatchlist.mutate({...props})} className="bg-sky-700">
-              Add to watchlist
-            </Button>
-          }
-          {
-            addToWatchlist.status == "loading" && 
-            <CircularProgress/>
-          }
-          {
-            addToWatchlist.status == "success" &&
-            <Typography color="green">
-              Successfully added to your watchlist!
-            </Typography>
-          }
-          {
-            addToWatchlist.status == "error" &&
-            <Typography>
-              <SentimentVeryDissatisfied color="error"/> Could not add to watchlist
-            </Typography>
-          }
-        
+        <Content/>
       </div>
   )
 }
 
-function AlreadyOnWatchlist(){
+const AlreadyOnWatchlist = () => {
   return (
     <Typography color="blue" className="flex justify-center">
       This item is in your watchlist
@@ -70,7 +69,7 @@ function AlreadyOnWatchlist(){
   )
 }
 
-function WatchlistOption(props:{gunName:string,skinName:string,id:string,tier:string}){
+const WatchlistOption = (props:{gunName:string,skinName:string,id:string,tier:string}) => {
   const gunOnUserWatchlist = api.watchlist.userHasGunOnWatchlist.useQuery(props)
   if (gunOnUserWatchlist.isLoading){
     return (
@@ -88,7 +87,6 @@ function WatchlistOption(props:{gunName:string,skinName:string,id:string,tier:st
       </div>
   )
 }
-
 
 export default function Page(props: {steam:Prices,bitskins:Prices}) {
   const path = usePathname();
