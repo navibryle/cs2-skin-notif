@@ -7,8 +7,11 @@ import { bitskinsPrice } from '~/services/bitskinsService';
 import { getNamesFormUrl, steamPrice } from '~/services/steamService';
 import { api } from '~/utils/api';
 import { type GetSkinPrice, type Prices } from '~/utils/types';
-import { getPathToPic } from '~/utils/util';
+import { convertToFrontEndForm, getPathToPic } from '~/utils/util';
 import { marketTiers } from '~/services/constants';
+import SentimentVeryDissatisfied from '@mui/icons-material/SentimentVeryDissatisfied';
+import { CenteredLoading } from '~/components/Loading';
+import { CenteredError } from '~/components/Error';
 
 
 export async function getServerSideProps(context:NextPageContext){
@@ -44,17 +47,15 @@ function AddBtn(props:{gunName:string,skinName:string,id:string,tier:string}){
           }
           {
             addToWatchlist.status == "success" &&
-            <div>
-              {/*TODO: make this text green*/}
-              Added to watchlist
-            </div>
+            <Typography color="green">
+              Successfully added to your watchlist!
+            </Typography>
           }
           {
             addToWatchlist.status == "error" &&
-            <div>
-              {/*TODO: make this text red*/}
-              Could not add to watchlist
-            </div>
+            <Typography>
+              <SentimentVeryDissatisfied color="error"/> Could not add to watchlist
+            </Typography>
           }
         
       </div>
@@ -62,11 +63,10 @@ function AddBtn(props:{gunName:string,skinName:string,id:string,tier:string}){
 }
 
 function AlreadyOnWatchlist(){
-  // TODO: make the text pop
   return (
-    <div className="flex justify-center">
-      Already Added
-    </div>
+    <Typography color="blue" className="flex justify-center">
+      This item is in your watchlist
+    </Typography>
   )
 }
 
@@ -74,16 +74,12 @@ function WatchlistOption(props:{gunName:string,skinName:string,id:string,tier:st
   const gunOnUserWatchlist = api.watchlist.userHasGunOnWatchlist.useQuery(props)
   if (gunOnUserWatchlist.isLoading){
     return (
-    <div>
-      <CircularProgress/>
-    </div>)
+    <CenteredLoading/>
+    )
   }
   if (gunOnUserWatchlist.isError){
     return (
-      <div>
-        {/*TODO: throw cool error component here*/}
-        ERROR
-      </div>
+      <CenteredError/>
     )
   }
   return (
@@ -102,6 +98,7 @@ export default function Page(props: {steam:Prices,bitskins:Prices}) {
     return (
     <div className="h-lvh">
       <div className="flex flex-col h-full">
+        <Typography className="text-center" variant="h5">{convertToFrontEndForm(gunName) + " "+convertToFrontEndForm(skinName)}</Typography>
         <div className="flex flex-1 flex-row justify-center">
           <div id ="pic" >
             <Image src={getPathToPic(gunName,skinName)} alt={gunName.concat(" ").concat(skinName)} width={500} height={700}/>

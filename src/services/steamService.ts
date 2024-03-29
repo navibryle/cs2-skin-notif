@@ -46,13 +46,13 @@ export async function getMarketPrice(gunName:string,skinName:string,marketTier: 
      const {lowest_price} = await steamData.json() as {lowest_price:Promise<string> | null};
      return await lowest_price;
    }catch( e ){
-    return "Unknown";
+    return "No listings";
    }
 }
 
 function validatePrice(price :string | null){
   if (price === undefined || price === null){
-    return "Unknown";
+    return "No listings";
   }
   return price;
 }

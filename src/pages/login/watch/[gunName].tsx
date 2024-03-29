@@ -4,6 +4,8 @@ import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
+import { CenteredError } from "~/components/Error";
+import { CenteredLoading } from "~/components/Loading";
 import { db } from "~/server/db";
 import { marketTiers } from "~/services/constants";
 import { getNamesFormUrl } from "~/services/steamService";
@@ -67,10 +69,9 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,s
 
   const Btn = () => {
     if (updatePrice.isError){
-      // TODO: display good error
-      return <div> Error</div>;
+      return <CenteredError className="mt-3"/>
     }else if (updatePrice.isLoading){
-      return <CircularProgress/>
+      return <CenteredLoading className="mt-3"/>
     }else if(updatePrice.isIdle){
       return <Button color="inherit" className="bg-sky-700 mt-4" onClick={() => 
         price && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:price,tier:selectedTier,lastNotif:null})
@@ -112,12 +113,11 @@ function WatchlistInputForm(props: {skinId:bigint,userId:string,dbData?:DbData,s
 }
 
 function PriceDisplay(props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>>}){
-  // TODO: pretify this
   return (
     <div>
       Watchlist Price: {props.dbData.dbPrice}<br/>
       Tier: {props.dbData.dbTier}<br/>
-      <Button className="bg-sky-700" onClick={() => props.setMode(Mode.Edit)}>Update</Button>
+      <Button color="inherit" className="bg-sky-700" onClick={() => props.setMode(Mode.Edit)}>Update</Button>
     </div>
   )
 }

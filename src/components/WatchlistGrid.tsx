@@ -2,7 +2,9 @@ import { Grid } from "@mui/material";
 import { useState } from 'react';
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
+import { CenteredError } from "./Error";
 import GridEntry from "./GridEntry";
+import { CenteredLoading } from "./Loading";
 
 
 
@@ -13,21 +15,18 @@ export default function WatchlistGrid(props:{
   const [shouldDisable,setShouldDisable] = useState(false);
 
   if (res.status == "loading"){
-    // TODO: add cool loading screen
-    return <div>loading</div>;
+    return <CenteredLoading/>
   }else if (res.status == "error"){
-    // TODO: return error page
-    return <div>Error</div>;
+    return <CenteredError/>
   }
 
   const skinList = [];
 
   for (const i of res.data){
-    // TODO: create new grid that fetches a list of guns
     skinList.push({gunName:i.SKIN.GUN_NAME,skinName:i.SKIN.NAME,id:i.SKIN.ID,price:i.PRICE,tier:i.TIER});
   }
   return (
-  <Grid container spacing={5} className="m-1 p-3">
+  <Grid container spacing={5} className="p-10">
     {skinList.map(
       (skin) =>(
           <GridEntry
