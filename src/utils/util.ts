@@ -1,7 +1,7 @@
 import { type Dispatch, type SetStateAction } from "react";
 import { type StackEntry } from "./types";
 
-export function getLastPathOfUrl(url : string):string{
+export const getLastPathOfUrl = (url : string):string => {
   let idxOfFirstSlash = -1;
   for (let i = url.length - 1; i > -1 && url[i] !== "/";i--){
     idxOfFirstSlash = i;
@@ -20,7 +20,7 @@ export function getLastPathOfUrl(url : string):string{
   return out;
 }
 
-export function getPath(url : string) : string{
+export const getPath = (url : string) : string => {
   let idxOfFirstSlash = -1;
 
   for (;idxOfFirstSlash < url.length && url[idxOfFirstSlash] !== "/";idxOfFirstSlash++){
@@ -34,29 +34,29 @@ export function getPath(url : string) : string{
   return url.substring(idxOfFirstSlash);
 }
 
-export function convertToDbForm(frontEndString:string){
+export const convertToDbForm = (frontEndString:string) => {
   return frontEndString.replaceAll(" ","_");
 }
 
-export function convertToFrontEndForm(dbString:string){
+export const convertToFrontEndForm = (dbString:string) => {
   return dbString.replaceAll("_"," ");
 }
 
-export function idGen(){
+export const idGen = () => {
   return (Math.random()*Math.pow(2,31));
 }
 
 // the gunName and skinName must be in db form
-export function getPathToPic(gunName:string,skinName:string){
+export const getPathToPic = (gunName:string,skinName:string) => {
   return "/Skins".concat("/").concat(gunName).concat("/Factory_New").concat("/").concat(skinName).concat(".png");
 }
 
-export function popStack(pageStack: Array<StackEntry>,setPageStack:Dispatch<SetStateAction<Array<StackEntry>>>){
+export const popStack = (pageStack: Array<StackEntry>,setPageStack:Dispatch<SetStateAction<Array<StackEntry>>>) => {
   pageStack.pop();
   setPageStack(pageStack);
 }
 
-export function pushStack(pageStack :Array<StackEntry>,setPageStack :Dispatch<SetStateAction<Array<StackEntry>>>,entry :StackEntry){
+export const pushStack = (pageStack :Array<StackEntry>,setPageStack :Dispatch<SetStateAction<Array<StackEntry>>>,entry :StackEntry) => {
   pageStack.push(entry);
   setPageStack(pageStack);
 }
