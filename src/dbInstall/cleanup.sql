@@ -1,5 +1,0 @@
-DELETE FROM Account;
-DELETE FROM Post;
-DELETE FROM Session;
-DELETE FROM User;
-DELETE FROM VerificationToken;

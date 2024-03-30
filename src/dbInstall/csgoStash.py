@@ -2,6 +2,7 @@ import json
 import sys
 import os
 import requests
+import time
 
 if (len(sys.argv) != 3):
     print("Incorrect amount of args, need the directory of the json data followed by the target folder.")
@@ -13,6 +14,7 @@ gunsCreated = []
 skinCreated = {}
 rootFolder = sys.argv[2]
 sqlFile = rootFolder+"/dataInit.sql"
+count = 0
 
 def findIdxOfLastDash(aString):
     lastIdx = 0
@@ -23,10 +25,10 @@ def findIdxOfLastDash(aString):
 
 def parseJsonEntry(fName):
     with open(fName) as file:
-        global gunId,skinId,gunsCreated,gunIdMap,rootFolder,sqlFile
+        global gunId,skinId,gunsCreated,gunIdMap,rootFolder,sqlFile,count
         contentKey = "content"
         fileJson = json.load(file)
-        with open(sqlFile,"a") as f:
+        with open(sqlFile,"a",1) as f:
             if contentKey in fileJson.keys():
                 for _,i in fileJson[contentKey].items():
                     for k in i:
@@ -52,17 +54,23 @@ def parseJsonEntry(fName):
                             tmp = "INSERT INTO SKINS (ID,NAME,GUN_NAME) VALUES (" + str(skinId) +",'"+skinName+"','"+name+"');\n"
                             f.write(tmp)
                             skinId += 1
-                        rootPath = rootFolder+"/"+name
-                        for wearTier,z in k["wears"].items():
-                            newPath.append(rootPath+"/"+wearTier)
-                        for idx,h in enumerate(newPath):
-                            h = h.replace(" ","_")
-                            newPath[idx] = h
-                            if not os.path.exists(h):
-                                os.makedirs(h)
-                        for (idx,(wearTier,z)) in enumerate(k["wears"].items()):
-                            with open(newPath[idx]+"/"+skinName+".png","wb") as im:
-                                im.write(requests.get(z).content)
+                            rootPath = rootFolder+"/"+name
+                            for wearTier,z in k["wears"].items():
+                                newPath.append(rootPath+"/"+wearTier)
+                            for idx,h in enumerate(newPath):
+                                h = h.replace(" ","_")
+                                newPath[idx] = h
+                                if not os.path.exists(h):
+                                    os.makedirs(h)
+                            for (idx,(wearTier,z)) in enumerate(k["wears"].items()):
+                                with open(newPath[idx]+"/"+skinName+".png","wb") as im:
+                                    r = requests.get(z)
+                                    print("req status",str(r.status_code),count,name,skinName)
+                                    count += 1
+                                    im.write(r.content)
+                                    time.sleep(1)
+                        else:
+                          print("Already in the sql file ",name,skinName)
 if (not os.path.exists(rootFolder)):
     os.makedirs(rootFolder)
 if (not os.path.exists(sqlFile)):
@@ -72,4 +80,3 @@ for (path,dirnames,filenames) in os.walk(sys.argv[1]):
     for i in filenames:
         if i[-4:] == "json":
             parseJsonEntry(path+"/"+i)
-
