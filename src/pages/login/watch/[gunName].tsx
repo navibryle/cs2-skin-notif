@@ -4,13 +4,13 @@ import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { CenteredError } from "~/components/Error";
 import { CenteredLoading } from "~/components/Loading";
 import { db } from "~/server/db";
 import { marketTiers } from "~/services/constants";
 import { getNamesFromUrl } from '~/utils/util';
 import { api } from "~/utils/api";
 import { convertToFrontEndForm, getPathToPic, idGen } from "~/utils/util";
+import CenteredError from "~/components/Error";
 
 enum Mode{
   View,

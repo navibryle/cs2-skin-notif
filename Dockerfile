@@ -1,2 +1,16 @@
 FROM node:21-alpine3.18
 
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL
+ARG DOMAIN_URL
+ARG GOOGLE_CLIENT_SECRET
+ARG GOOGLE_CLIENT_ID
+
+RUN mkdir -p /home/cs
+WORKDIR /home/cs
+COPY * .
+RUN touch .env && echo "DATABASE_URL=${DATABASE_URL}" >> .env  && echo "NEXTAUTH_SECRET=${NEXTAUTH_SECRET}" >> .env && echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env && echo "DOMAIN_URL=${DOMAIN_URL}" >> .env && echo "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" >> .env && echo "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" >> .env
+RUN npm run build
+
+CMD npm run start

@@ -41,34 +41,6 @@ const getSkinId = async (skinName: string, gunName:string,
   return gunList[0].ID;
 }
 
-const getUser = async (email :string,ctx:{
-      session: Session | null;
-      db: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>;
-    } ) => {
-  const userList = await ctx.db.user.findMany(
-    {
-      select:{
-        id:true
-      },
-      where:{
-        email:{
-          equals:email
-        }
-      }
-    }
-  )
-
-  if (userList.length > 1){
-    throw Error(errorIntro.concat(" since"));
-  }else if(userList.length == 0){
-    throw Error(errorIntro.concat(" since the user is not in the database"));
-  }else if (!userList[0]?.id){
-    throw Error(errorIntro.concat(" due to database error"));
-  }
-
-  return userList[0].id;
-}
-
 export const watchlistRouter = createTRPCRouter(
   {
     addToUsersWatchlist : publicProcedure.input(WatchlistCreateQuerySchema).mutation(
