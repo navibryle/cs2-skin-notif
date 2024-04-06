@@ -10,7 +10,7 @@ const SignOutBtn = (props : {isSignedIn: boolean}) => {
     }
     return (
         <Toolbar className = "ml-auto">
-            <Button onClick={() => signOut()} className="text-xs">Sign Out</Button>
+            <Button color="inherit" onClick={() => signOut()} className="text-xs">Sign Out</Button>
         </Toolbar>
     )
 }
@@ -22,9 +22,9 @@ export default function Navbar (){
     if (status == "loading"){
         content = <CenteredLoading/>;
     }else if (status == "unauthenticated"){
-        content = <Button onClick={() => signIn()} >Login</Button>;
+        content = <Button color="inherit" onClick={() => signIn()} >Login</Button>;
     }else{
-        content = <Button onClick={() => push("/login/".concat(session?.user?.name ?? "unkown/user"))} className="text-xs" style={{backgroundColor:"rgb(52,120,232)"}}>{session?.user.email}</Button>;
+        content = <Button color="inherit" onClick={() => push("/login/".concat(session?.user?.name ?? "unkown/user"))} className="text-xs" style={{backgroundColor:"rgb(52,120,232)"}}>{session?.user.email}</Button>;
     }
     return (
         <AppBar position="static">

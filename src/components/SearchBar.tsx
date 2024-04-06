@@ -39,7 +39,7 @@ export default function SearchBar(props:{
       updateSearchBar(props?.hasQueryResState.hasQueryRes,searchBarTopMargin,setSearchBarTopMargin); 
     }  
     return (
-      <div id="searchBar" className="flex flex-col" style={{marginTop:searchBarTopMargin,marginBottom:afterSearchHeight}}>
+      <div id="searchBar" className="flex flex-col p-3" style={{marginTop:searchBarTopMargin,marginBottom:afterSearchHeight}}>
         <div className="text-center">
           <span className="flex justify-center">
           <Autocomplete 
