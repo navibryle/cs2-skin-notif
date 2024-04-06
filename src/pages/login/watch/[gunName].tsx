@@ -135,12 +135,10 @@ const PriceDisplay = (props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>
 }
 
 export default function Page(props:{dbPrice:string,skinId:string,userId:string,dbTier:string}){
-  console.warn("DEBUGPRINT[4]: [gunName].tsx:137 (after export default function Page(props:dbPri…)")
   const [mode,setMode] = useState(props.dbTier && props.dbPrice ? Mode.View : Mode.Create);
   const [dbData,setDbData]  = useState({dbPrice: props.dbPrice,dbTier: props.dbTier} as DbData)
   const path = usePathname();
   const skinId = BigInt(props.skinId);
-  console.warn("DEBUGPRINT[5]: [gunName].tsx:142 (after const skinId = BigInt(props.skinId);)")
   const Form = () => {
    switch(mode){
     case Mode.View:{
@@ -153,11 +151,8 @@ export default function Page(props:{dbPrice:string,skinId:string,userId:string,d
    }
   }
 
-  console.warn("DEBUGPRINT[6]: [gunName].tsx:155 (after return <WatchlistInputForm skinId=skinId…)")
   if (path !== null){
-    console.warn("DEBUGPRINT[7]: [gunName].tsx:157 (after if (path !== null))")
     const [gunName,skinName] = getNamesFromUrl(path) as [string,string]; // this cannot be undefined anyways since an error in the func would've been thrown
-    console.warn("DEBUGPRINT[8]: [gunName].tsx:159 (after const [gunName,skinName] = getNamesFromU…)")
     return (
       <div className="flex text-center flex-col sm:flex-row">
         <div className="flex flex-col">
