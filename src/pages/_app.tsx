@@ -12,8 +12,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
   <SessionProvider session={session}>
-    <Navbar/>
-    <Component {...pageProps} />
+    <div className="overflow-x-hidden">
+      <Navbar/>
+      <Component {...pageProps} />
+    </div>
   </SessionProvider>
   );
 };

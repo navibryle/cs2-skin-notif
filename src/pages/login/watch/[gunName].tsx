@@ -85,7 +85,7 @@ const WatchlistInputForm = (props: {skinId:bigint,userId:string,dbData?:DbData,s
     }else if (updatePrice.isLoading){
       return <CenteredLoading className="mt-3"/>
     }else if(updatePrice.isIdle){
-      return <Button color="inherit" className="bg-sky-700 mt-4" onClick={() => 
+      return <Button className="bg-sky-700 mt-4" onClick={() => 
         price && selectedTier && updatePrice.mutate({skinId:props.skinId,userId:props.userId,price:price,tier:selectedTier,lastNotif:null})
       }>Finish</Button>;
     }else if (updatePrice.isSuccess){
@@ -129,7 +129,7 @@ const PriceDisplay = (props:{dbData:DbData,setMode:Dispatch<SetStateAction<Mode>
     <div>
       Watchlist Price: {props.dbData.dbPrice}<br/>
       Tier: {props.dbData.dbTier}<br/>
-      <Button color="inherit" className="bg-sky-700" onClick={() => props.setMode(Mode.Edit)}>Update</Button>
+      <Button className="bg-sky-700" onClick={() => props.setMode(Mode.Edit)}>Update</Button>
     </div>
   )
 }

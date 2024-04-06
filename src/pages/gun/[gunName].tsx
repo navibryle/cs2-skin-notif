@@ -37,7 +37,7 @@ const AddBtn = (props:{gunName:string,skinName:string,id:string,tier:string}) =>
   const Content = () => {
     if (addToWatchlist.isIdle){
       return (
-        <Button color="inherit" onClick = {() => addToWatchlist.mutate({...props})} className="bg-sky-700">
+        <Button onClick = {() => addToWatchlist.mutate({...props})} className="bg-sky-700">
           Add to watchlist
         </Button>
       )
