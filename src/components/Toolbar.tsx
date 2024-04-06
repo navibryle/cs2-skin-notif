@@ -24,7 +24,7 @@ export default function Navbar (){
     }else if (status == "unauthenticated"){
         content = <Button color="inherit" onClick={() => signIn()} >Login</Button>;
     }else{
-        content = <Button color="inherit" onClick={() => push("/login/".concat(session?.user?.name ?? "unkown/user"))} className="text-xs" style={{backgroundColor:"rgb(52,120,232)"}}>{session?.user.email}</Button>;
+        content = <Button color="inherit" onClick={() => push("/login/".concat(session?.user?.name ?? "unkown/user"))} className="text-xs" style={{backgroundColor:"rgb(52,120,232)"}}>My watchlist</Button>;
     }
     return (
         <AppBar position="static">
