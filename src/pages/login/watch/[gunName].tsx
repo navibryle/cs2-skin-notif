@@ -108,14 +108,14 @@ const WatchlistInputForm = (props: {skinId:bigint,userId:string,dbData?:DbData,s
       <div>
         <TextField label="Watchlist price" className="w-3/4 sm:w-full" value={price} onChange={(e) => {
           const inp = e.target.value;
+          setPrice(inp);
           for (const i of inp){
             if (!isDigit(i) && i !== "."){
               setIsError(true);
-              return;
+              return inp;
             }
           }
           setIsError(false);
-          setPrice(inp);
         }}/>
       </div>
       {isError && <div className="text-xs text-red-500" >Incorrect price format, please enter a decimal number</div>}
