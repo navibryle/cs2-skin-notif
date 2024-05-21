@@ -108,7 +108,8 @@ export const watchlistRouter = createTRPCRouter(
         data:{
           PRICE:input.price,
           TIER:input.tier,
-          LAST_NOTIF:input.lastNotif
+          LAST_NOTIF:input.lastNotif,
+          LAST_FETCH:null
         }
       })
     })
